@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+
+from __future__ import print_function
+import json
+import os
+import sys
+import requests
+
+
+class GoogleChatNotifyResource:
+    """Notify resource implementation."""
+
+    def send(self, url, msg):
+        """Construct the webhook request and send it."""
+        headers = {'Content-Type': 'application/json; charset=UTF-8'}
+        body = {'text': msg}
+
+        response = requests.request("POST", url, json=body, headers=headers)
+
+        if response.status_code != 200:
+            raise Exception('Unexpected response {}'.format(response.status_code))
+
+        return (response.status_code, response.text)
+
+    def run(self, command_name, json_data, command_argument):
+        """Extract source/params, perform the requested command and return the output."""
+        # combine source and params
+        data = json.loads(json_data)
+        source = data.get('source', dict())
+        params = data.get('params', dict())
+
+        url = source.get('webhook_url')
+        message = params.get('message')
+        build_uuid = os.getenv('BUILD_ID')
+        build_id = os.getenv('BUILD_NAME')
+        job_name = os.getenv('BUILD_JOB_NAME')
+        pipeline_name = os.getenv('BUILD_PIPELINE_NAME')
+        team_name = os.getenv('BUILD_TEAM_NAME')
+        atc_url = os.getenv('ATC_EXTERNAL_URL')
+
+        text = "Pipeline: %s\nJob: #%s %s\n%s" % (pipeline_name, build_id, job_name, message or '')
+
+        empty_response = {"version": {}}
+
+        if not url:
+            print("Missing 'webhock_url' under resource source.\nSkip posting to GoogleChat.", file=sys.stderr)
+            return json.dumps(empty_response)
+
+        status, text = self.send(url, text)
+        print("Successfully posted to GoogleChat!", file=sys.stderr)
+        print("%s %s" % (status, text), file=sys.stderr)
+
+        return json.dumps(empty_response)
+
+
+try:
+    print(GoogleChatNotifyResource().run(os.path.basename(__file__), sys.stdin.read(), sys.argv[1:]))
+except Exception as err:
+    print("Something wrong happened, skip posting to GoogleChat:\n\n%s" % err)
