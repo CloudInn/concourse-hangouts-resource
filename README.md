@@ -44,13 +44,16 @@ Posts the given message to Google Hangouts channel that is corresponding to the 
 
 ### Example
 
+You're suggested to use it under `try:` step, you don't want your build to fail if the resource failed
+
 ```yaml
 jobs:
   - name: some-job
     plan:
-      - put: hangouts
-        params:
-          message: Job started running !
+      - try:
+          put: hangouts
+          params:
+            message: Job started running !
 ```
 
 ## Suggested Use Case:
@@ -59,9 +62,10 @@ jobs:
 jobs:
   - name: some-job
     plan:
-      - put: hangouts
-        params:
-          message: Job Started !
+      - try:
+          put: hangouts
+          params:
+            message: Job Started !
 
       # .
       # .
@@ -72,20 +76,22 @@ jobs:
       # .
 
     on_failure:
-      put: hangouts
-      params:
-        message: Job Failed !
+      try:
+        put: hangouts
+        params:
+          message: Job Failed !
 
     on_success:
-      put: hangouts
-      params:
-        message: Job Succeeded !
+      try:
+        put: hangouts
+        params:
+          message: Job Succeeded !
 ```
 
 ## Full example:
 This is a working example of a pipeline file that does absolutely nothing other then posting to Hangouts.
 
-You can test it as is after passing `hangouts_webhook` while setting up the pipeline or replacing `((hangouts_webhook))` in place with the webhook URL in the pipeline file.
+You can test it as is after passing `hangouts_webhook` while setting up the pipeline or replacing `((hangouts_webhook))` in place with the webhook URL.
 
 ```yaml
 resource_types:
@@ -114,9 +120,10 @@ jobs:
   - name: some-job
     serial: true
     plan:
-      - put: hangouts
-        params:
-          message: Build Started !
+      - try:
+          put: hangouts
+          params:
+            message: Build Started !
 
       # .
       # .
@@ -127,14 +134,16 @@ jobs:
       # .
 
     on_failure:
-      put: hangouts
-      params:
-        message: Build Failed !
+      try:
+        put: hangouts
+        params:
+          message: Build Failed !
 
     on_success:
-      put: hangouts
-      params:
-        message: Build Successed !
+      try:
+        put: hangouts
+        params:
+          message: Build Successed !
 ```
 
 ## License
