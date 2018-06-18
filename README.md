@@ -40,7 +40,8 @@ Posts the given message to Google Hangouts channel that is corresponding to the 
 
 #### Parameters
 
-* `message`: _Optional_. The message to send along the other information to Hangouts room.
+* `message`: _Optional_. The message to post along the other information to Hangouts room.
+* `message_file` _Optional_. File contains some text to post (will he appended to `message` if both are set)
 
 ### Example
 
@@ -53,7 +54,8 @@ jobs:
       - try:
           put: hangouts
           params:
-            message: Job started running !
+            message: "Successfully released version: "
+            message_file: project/version.txt
 ```
 
 ## Suggested Use Case:
