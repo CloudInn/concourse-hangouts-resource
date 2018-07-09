@@ -1,4 +1,1 @@
-#!/bin/sh
-
-# empty response to have non-failing implicit get after put
-echo '{"version": {}}'
+resource.py
