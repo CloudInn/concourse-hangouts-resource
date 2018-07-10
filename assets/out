@@ -5,6 +5,7 @@ import json
 import os
 import sys
 import requests
+import traceback
 
 
 class GoogleChatNotifyResource:
@@ -23,12 +24,28 @@ class GoogleChatNotifyResource:
         return (response.status_code, response.text)
 
     def run(self, command_name, json_data, command_arguments):
-        """Extract source/params, perform the requested command and return the output."""
-        # combine source and params
+        """Parse source/params, call the requested command and return the output."""
         data = json.loads(json_data)
         source = data.get('source', dict())
         params = data.get('params', dict())
+        workspace = command_arguments[0]
 
+        {
+            "in": self.in_res,
+            "out": self.out_res,
+            "check": self.check_res
+        }.get(command_name)(source, params, workspace)
+
+    def check_res(self, source, params, workspace):
+        """Return empty version to keep Concourse happy."""
+        return {"version": {}}
+
+    def in_res(self, source, params, workspace):
+        """Return empty version to keep Concourse happy."""
+        return {"version": {}}
+
+    def out_res(self, source, params, workspace):
+        """Extract required params for out, construct message and send it."""
         url = source.get('webhook_url')
         message = params.get('message')
         message_file = params.get('message_file')
@@ -38,15 +55,24 @@ class GoogleChatNotifyResource:
         pipeline_name = os.getenv('BUILD_PIPELINE_NAME')
         team_name = os.getenv('BUILD_TEAM_NAME')
         atc_url = os.getenv('ATC_EXTERNAL_URL')
+        url_enabled_source = source['post_url'] if type(source.get('post_url')) is bool else False
+        url_enabled_param = params['post_url'] if type(params.get('post_url')) is bool else None
 
-        message_file_path = "%s/%s" % (command_arguments[0], message_file)
+        url_enabled = url_enabled_param if type(url_enabled_param) is bool else url_enabled_source
+        build_url = "%s/teams/%s/pipelines/%s/jobs/%s/builds/%s" % (atc_url, team_name, pipeline_name, job_name, build_id)
+
+        message_file_path = "%s/%s" % (workspace, message_file)
         message_from_file = ""
         if os.path.isfile(message_file_path):
             with open(message_file_path, 'r') as f:
                 message_from_file = f.read()
 
         full_message = (message or '') + message_from_file
-        text = "Pipeline: %s\nJob: #%s %s\n%s" % (pipeline_name, build_id, job_name, full_message)
+        text = """\
+Pipeline: {0}
+Job: #{1} {2}
+{3}\
+""".format(pipeline_name, build_id, job_name, full_message) + ("\n" + build_url if url_enabled else "")
 
         response = {
             "version": {},
@@ -79,17 +105,26 @@ class GoogleChatNotifyResource:
             {"name": "create_time", "value": api_res.get('createTime')},
         ]
 
-        return json.dumps(response)
+        return response
 
 
 if __name__ == '__main__':
     try:
-        print(GoogleChatNotifyResource().run(os.path.basename(__file__), sys.stdin.read(), sys.argv[1:]))
+        r = GoogleChatNotifyResource().run(os.path.basename(__file__), sys.stdin.read(), sys.argv[1:])
+        print(json.dumps(r))
     except Exception as err:
-        print("Something wrong happened, skip posting to GoogleChat:\n\nError:\n%s" % err, file=sys.stderr)
-        print({
+        print("""\
+Something wrong happened, skip posting to GoogleChat:
+
+Error: %s
+Stacktrace:
+%s\
+""" % (err, "".join(traceback.format_stack())),
+            file=sys.stderr)
+
+        print(json.dumps({
             "version": {},
             "metadata": [
                 {"name": "status", "value": "Failed"},
             ]
-        })
+        }))
