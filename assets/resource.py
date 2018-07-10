@@ -19,6 +19,7 @@ class GoogleChatNotifyResource:
         response = requests.request("POST", url, json=body, headers=headers)
 
         if response.status_code != 200:
+            print("Response from webhook: %s" % response.content, file=sys.stderr)
             raise Exception('Unexpected response {}'.format(response.status_code))
 
         return (response.status_code, response.text)
@@ -30,11 +31,14 @@ class GoogleChatNotifyResource:
         params = data.get('params', dict())
         workspace = command_arguments[0]
 
-        {
+        resource = {
             "in": self.in_res,
             "out": self.out_res,
             "check": self.check_res
-        }.get(command_name)(source, params, workspace)
+        }.get(command_name)
+
+        output = resource(source, params, workspace)
+        print(json.dumps(output))
 
     def check_res(self, source, params, workspace):
         """Return empty version to keep Concourse happy."""
@@ -67,7 +71,7 @@ class GoogleChatNotifyResource:
             with open(message_file_path, 'r') as f:
                 message_from_file = f.read()
 
-        full_message = (message or '') + message_from_file
+        full_message = (message or '') + message_from_file.rstrip("\n")
         text = """\
 Pipeline: {0}
 Job: #{1} {2}
@@ -76,9 +80,7 @@ Job: #{1} {2}
 
         response = {
             "version": {},
-            "metadata": [
-                {"name": "message", "value": full_message},
-            ]
+            "metadata": []
         }
 
         if not url:
@@ -90,12 +92,13 @@ Job: #{1} {2}
             return json.dumps(response)
 
         status, text = self.send(url, text)
-        print("Successfully posted to GoogleChat!", file=sys.stderr)
         api_res = json.loads(text)
+
+        print("Successfully posted to GoogleChat!", file=sys.stderr)
+        print("Message:-\n%s" % api_res.get('text'), file=sys.stderr)
 
         response["metadata"] = [
             {"name": "status", "value": "Posted"},
-            {"name": "message", "value": api_res.get('text')},
             {"name": "sender_name", "value": api_res.get('sender') and api_res['sender'].get('name')},
             {"name": "sender_display_name", "value": api_res.get('sender') and api_res['sender'].get('displayName')},
             {"name": "space_name", "value": api_res.get('space') and api_res['space'].get('name')},
@@ -110,17 +113,17 @@ Job: #{1} {2}
 
 if __name__ == '__main__':
     try:
-        r = GoogleChatNotifyResource().run(os.path.basename(__file__), sys.stdin.read(), sys.argv[1:])
-        print(json.dumps(r))
+        GoogleChatNotifyResource().run(os.path.basename(__file__), sys.stdin.read(), sys.argv[1:])
     except Exception as err:
-        print("""\
+        print(
+            """\
 Something wrong happened, skip posting to GoogleChat:
 
 Error: %s
 Stacktrace:
-%s\
-""" % (err, "".join(traceback.format_stack())),
-            file=sys.stderr)
+""" % err, file=sys.stderr
+        )
+        traceback.print_exc(file=sys.stderr)
 
         print(json.dumps({
             "version": {},
