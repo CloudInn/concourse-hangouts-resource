@@ -3,6 +3,8 @@ Concourse Google Hangouts Resource
 
 A [Concourse](http://concourse.ci/) resource to post to notification to Google Hagouts room using webhooks, the notification includes the pipeline name, The job name and build number which the resource is running under, and an optional message.
 
+Listed in Concourse [community resources](https://concourse-ci.org/community-resources.html)
+
 ## Resource Type Configuration
 
 ```yaml
@@ -16,8 +18,8 @@ resource_types:
 
 ## Source Configuration
 
-* `webhook_url`: _Required_. The webhook generated for Hagouts channel. (i.e. "https://chat.googleapis.com/v1/spaces/ABC/messages?key=DEF)
-* `post_url`: _Optional - (Boolean)_. Post to notification a link to the current job, this is pipeline wide config in all jobs using this resource, can be overridden in `params` in each task. (*Default:* `False`)
+* `webhook_url`: _Required - (String)_. The webhook generated for Hagouts channel. (i.e. "https://chat.googleapis.com/v1/spaces/ABC/messages?key=DEF)
+* `post_url`: _Optional - (Boolean)_. Include link to the current job, this is pipeline wide setting in all jobs using resource, can be overridden in `params` in each step. (*Default:* `true`)
 
 ### Example
 
@@ -32,19 +34,19 @@ resources:
 
 ## Behaviour
 
-### `check`: Nonfunctional
+### `check`: Non-functional
 
-### `in`: Nonfunctional
+### `in`: Non-functional
 
-### `out`: Post message to pipeline
+### `out`: Post message to Hangouts chat room
 
 Posts the given message to Google Hangouts channel that is corresponding to the webhook. It additionally includes information from the current running build as `$BUILD_PIPELINE_NAME` which is the **pipeline name**, `$BUILD_NAME` which reflects the **build id** shown in Concourse Web UI, and `$BUILD_JOB_NAME` which is the **job name** as defined in the pipeline, both build id and job name belongs to the current build for the job the resource is used under.
 
 #### Parameters
 
-* `message`: _Optional_. The message to post along the other information to Hangouts room.
-* `message_file` _Optional_. Path to file containing text to append to `message`)
-* `post_url` _Optional - (Boolean)_. Post to notification a link to the current job, this will override `post_url` in `source` if set. (*Default:* Fall back to `post_url` in `source`)
+* `message`: _Optional - (String)_. The message to post along the other information to Hangouts room.
+* `message_file` _Optional - (String)_. Path to file containing text to append to `message`)
+* `post_url` _Optional - (Boolean)_. Include link to the current job, if set this will override `post_url` in `source` for the current step. (*Default:* Fall back to `post_url` in `source`)
 
 ### Example
 

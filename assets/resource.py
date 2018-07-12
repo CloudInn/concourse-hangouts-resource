@@ -59,7 +59,7 @@ class GoogleChatNotifyResource:
         pipeline_name = os.getenv('BUILD_PIPELINE_NAME')
         team_name = os.getenv('BUILD_TEAM_NAME')
         atc_url = os.getenv('ATC_EXTERNAL_URL')
-        url_enabled_source = source['post_url'] if type(source.get('post_url')) is bool else False
+        url_enabled_source = source['post_url'] if type(source.get('post_url')) is bool else True
         url_enabled_param = params['post_url'] if type(params.get('post_url')) is bool else None
 
         url_enabled = url_enabled_param if type(url_enabled_param) is bool else url_enabled_source
