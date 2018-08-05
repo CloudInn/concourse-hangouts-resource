@@ -42,7 +42,7 @@ class GoogleChatNotifyResource:
 
     def check_res(self, source, params, workspace):
         """Return empty version to keep Concourse happy."""
-        return {"version": {}}
+        return [{}]
 
     def in_res(self, source, params, workspace):
         """Return empty version to keep Concourse happy."""
