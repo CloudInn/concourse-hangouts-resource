@@ -84,12 +84,12 @@ Job: #{1} {2}
         }
 
         if not url:
-            print("Missing 'webhock_url' under resource source.\nSkip posting to GoogleChat.", file=sys.stderr)
+            print("Missing 'webhook_url' under resource source.\nSkip posting to GoogleChat.", file=sys.stderr)
             response["metadata"] += [
                 {"name": "status", "value": "Failed"},
-                {"name": "error", "value": "Missing 'webhock_url' in source"}
+                {"name": "error", "value": "Missing 'webhook_url' in source"}
             ]
-            return json.dumps(response)
+            return response
 
         status, text = self.send(url, text)
         api_res = json.loads(text)
