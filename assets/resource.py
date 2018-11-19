@@ -29,7 +29,10 @@ class GoogleChatNotifyResource:
         data = json.loads(json_data)
         source = data.get('source', dict())
         params = data.get('params', dict())
-        workspace = command_arguments[0]
+        if command_arguments:
+            workspace = command_arguments[0]
+        else:
+            workspace = ""
 
         resource = {
             "in": self.in_res,
@@ -42,11 +45,11 @@ class GoogleChatNotifyResource:
 
     def check_res(self, source, params, workspace):
         """Return empty version to keep Concourse happy."""
-        return {"version": {}}
+        return []
 
     def in_res(self, source, params, workspace):
         """Return empty version to keep Concourse happy."""
-        return {"version": {}}
+        return []
 
     def out_res(self, source, params, workspace):
         """Extract required params for out, construct message and send it."""
