@@ -49,7 +49,7 @@ class GoogleChatNotifyResource:
 
     def in_res(self, source, params, workspace):
         """Return empty version to keep Concourse happy."""
-        return []
+        return {"version": {}}
 
     def out_res(self, source, params, workspace):
         """Extract required params for out, construct message and send it."""
