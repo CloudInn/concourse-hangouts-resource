@@ -1,7 +1,7 @@
 Concourse Google Hangouts Resource
 ======================
 
-A [Concourse](http://concourse.ci/) resource to post to notification to Google Hagouts room using webhooks, the notification includes the pipeline name, The job name and build number which the resource is running under, and an optional message.
+A [Concourse](http://concourse.ci/) resource to post to notification to Google Hangouts room using webhooks, the notification includes the pipeline name, The job name and build number which the resource is running under, and an optional message.
 
 Listed in Concourse [community resources](https://concourse-ci.org/community-resources.html)
 
@@ -18,7 +18,7 @@ resource_types:
 
 ## Source Configuration
 
-* `webhook_url`: _Required - (String)_. The webhook generated for Hagouts channel. (i.e. "https://chat.googleapis.com/v1/spaces/ABC/messages?key=DEF)
+* `webhook_url`: _Required - (String)_. The webhook generated for Hangouts channel. (i.e. "https://chat.googleapis.com/v1/spaces/ABC/messages?key=DEF)
 * `post_url`: _Optional - (Boolean)_. Include link to the current job, this is pipeline wide setting in all jobs using resource, can be overridden in `params` in each step. (*Default:* `true`)
 
 ### Example
