@@ -7,8 +7,8 @@ RUN pip install -r requirements.txt
 
 # Run tests
 FROM dependencies as test
-COPY ./assets/ /opt/resource/
-RUN echo "tests will go here" && touch /test-success
+COPY ./ /
+RUN /testing/test.sh && touch /test-success
 
 # Copy assets
 FROM dependencies as production

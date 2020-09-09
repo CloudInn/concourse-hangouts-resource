@@ -92,6 +92,7 @@ Job: #{1} {2}
                 {"name": "status", "value": "Failed"},
                 {"name": "error", "value": "Missing 'webhook_url' in source"}
             ]
+            sys.exit(1)
             return response
 
         status, text = self.send(url, text)
@@ -134,3 +135,4 @@ Stacktrace:
                 {"name": "status", "value": "Failed"},
             ]
         }))
+        sys.exit(1)
