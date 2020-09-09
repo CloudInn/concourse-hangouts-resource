@@ -154,7 +154,7 @@ jobs:
       try:
         put: hangouts
         params:
-          message: Build Successed !
+          message: Build Passed !
 ```
 
 ## License
