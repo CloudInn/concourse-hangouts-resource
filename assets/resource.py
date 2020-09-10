@@ -48,7 +48,7 @@ def out_res(source, params, workspace):
     message = params.get("message")
     message_file = params.get("message_file")
     url_enabled = (
-        params.get("post_url") if type(params.get("post_url")) is bool else True
+        params.get("post_url") if isinstance(params.get("post_url"), bool) else True
     )
     build_uuid = os.getenv("BUILD_ID")
     build_id = os.getenv("BUILD_NAME")
