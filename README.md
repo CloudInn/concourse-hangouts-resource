@@ -44,9 +44,9 @@ Posts the given message to a Google Hangouts Room that corresponds to the provid
 * `message_file` _Optional - (String)_. Path to file containing text to append to `message`)
 * `post_url` _Optional - (Boolean)_. Include link to the current job. (*Default:* `true`)
 
-### Usage Notes
+### Example
 
-It's recommended to use this resource in the `try:` step so that your build doesn't fail if the resource fails to send the message
+It's recommended to use this resource in the `try:` step so that your build doesn't fail if the resource fails to send the message.
 
 ```yaml
 jobs:
@@ -72,12 +72,14 @@ jobs:
         put: hangouts
         params:
           message: Job Failed!
+          post_url: false
 
     on_success:
       try:
         put: hangouts
         params:
           message: Job Succeeded!
+          post_url: false
 ```
 
 ## Complete Example:
