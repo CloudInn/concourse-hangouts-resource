@@ -4,6 +4,7 @@
 	},
 	"params": {
 		"message": "Test Message",
-		"message_file": "testing/message.txt"
+		"message_file": "testing/message.txt",
+		"post_url": true
 	}
 }

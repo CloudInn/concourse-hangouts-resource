@@ -19,7 +19,6 @@ resource_types:
 ## Source Configuration
 
 * `webhook_url`: _Required - (String)_. The webhook generated for Hangouts channel. (i.e. "https://chat.googleapis.com/v1/spaces/ABC/messages?key=DEF)
-* `post_url`: _Optional - (Boolean)_. Include link to the current job, this is pipeline wide setting in all jobs using resource, can be overridden in `params` in each step. (*Default:* `true`)
 
 ### Example
 
@@ -29,7 +28,6 @@ resources:
   type: hangouts-resource
   source:
     webhook_url: {{pipeline_alerts_webhook}}
-    post_url: true
 ```
 
 ## Behaviour
@@ -46,7 +44,7 @@ Posts the given message to Google Hangouts channel that is corresponding to the 
 
 * `message`: _Optional - (String)_. The message to post along the other information to Hangouts room.
 * `message_file` _Optional - (String)_. Path to file containing text to append to `message`)
-* `post_url` _Optional - (Boolean)_. Include link to the current job, if set this will override `post_url` in `source` for the current step. (*Default:* Fall back to `post_url` in `source`)
+* `post_url` _Optional - (Boolean)_. Include link to the current job. (*Default:* Fall back to `post_url` in `source`)
 
 ### Example
 
@@ -109,14 +107,12 @@ resource_types:
     source:
       repository: cloudinn/concourse-hangouts-resource
       tag: latest
-      post_url: true
 
 resources:
 - name: hangouts
   type: hangouts-resource
   source:
     webhook_url: ((hangouts_webhook))
-    post_url: true
 
   # .
   # .

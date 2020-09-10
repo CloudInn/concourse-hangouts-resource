@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-
-from __future__ import print_function
 import json
 import os
 import sys
@@ -49,23 +47,21 @@ def out_res(source, params, workspace):
         raise Exception("Webhook URL missing from configuration")
     message = params.get("message")
     message_file = params.get("message_file")
+    url_enabled = (
+        params.get("post_url") if type(params.get("post_url")) is bool else True
+    )
     build_uuid = os.getenv("BUILD_ID")
     build_id = os.getenv("BUILD_NAME")
     job_name = os.getenv("BUILD_JOB_NAME")
     pipeline_name = os.getenv("BUILD_PIPELINE_NAME")
     team_name = os.getenv("BUILD_TEAM_NAME")
     atc_url = os.getenv("ATC_EXTERNAL_URL")
-    url_enabled_source = (
-        source["post_url"] if type(source.get("post_url")) is bool else True
-    )
-    url_enabled_param = (
-        params["post_url"] if type(params.get("post_url")) is bool else None
-    )
 
-    url_enabled = (
-        url_enabled_param if type(url_enabled_param) is bool else url_enabled_source
+    build_url = (
+        f"\n{atc_url}/teams/{team_name}/pipelines/{pipeline_name}/jobs/{job_name}/builds/{build_id}"
+        if url_enabled
+        else ""
     )
-    build_url = f"{atc_url}/teams/{team_name}/pipelines/{pipeline_name}/jobs/{job_name}/builds/{build_id}"
 
     message_file_path = f"{workspace}/{message_file}"
     message_from_file = ""
@@ -78,8 +74,7 @@ def out_res(source, params, workspace):
     message_text = f"""
 Pipeline: {pipeline_name}
 Job: {job_name}
-Build: #{build_id}
-{build_url if url_enabled else ''}
+Build: #{build_id}{build_url}
 {message or ""}
 {message_from_file}
 """

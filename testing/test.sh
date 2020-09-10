@@ -4,16 +4,24 @@ cd ./assets
 BR_YELLOW='\e[0;93m'
 RESET='\e[0m'
 
-echo -e "${BR_YELLOW}Testing out sunny day...${RESET}"
-./out / < ../testing/content.json
+echo -e "${BR_YELLOW}Testing out sunny day with URL...${RESET}"
+./out / < ../testing/with-url.json
+echo -e
+
+echo -e "${BR_YELLOW}Testing out sunny day without URL...${RESET}"
+./out / < ../testing/no-url.json
+echo -e
+
+echo -e "${BR_YELLOW}Testing out sunny day URL not specified...${RESET}"
+./out / < ../testing/basic.json
 echo -e
 
 echo -e "${BR_YELLOW}Testing in sunny day...${RESET}"
-./in / < ../testing/content.json
+./in / < ../testing/basic.json
 echo -e
 
 echo -e "${BR_YELLOW}Testing check sunny day...${RESET}"
-./check / < ../testing/content.json
+./check / < ../testing/basic.json
 echo -e
 
 echo -e "${BR_YELLOW}Testing out bad config...${RESET}"

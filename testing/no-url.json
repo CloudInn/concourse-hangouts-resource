@@ -1,0 +1,10 @@
+{
+	"source": {
+		"webhook_url": "https://httpbin.org/post"
+	},
+	"params": {
+		"message": "Test Message",
+		"message_file": "testing/message.txt",
+		"post_url": false
+	}
+}
