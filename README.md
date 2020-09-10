@@ -1,3 +1,4 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/barrelmaker97/concourse-hangouts-resource/badge/master)](https://www.codefactor.io/repository/github/barrelmaker97/concourse-hangouts-resource/overview/master)
 Concourse Google Hangouts Resource
 ======================
 
