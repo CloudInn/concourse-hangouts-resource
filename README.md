@@ -1,9 +1,7 @@
 Concourse Google Hangouts Resource
 ======================
 
-A [Concourse](http://concourse.ci/) resource to post to notification to Google Hangouts room using webhooks, the notification includes the pipeline name, The job name and build number which the resource is running under, and an optional message.
-
-Listed in Concourse [community resources](https://concourse-ci.org/community-resources.html)
+A [Concourse](http://concourse.ci/) resource to post a message to Google Hangouts room using webhooks. The message includes the pipeline name, job name and build number which the resource is running under, and an optional message/message file.
 
 ## Resource Type Configuration
 
@@ -38,7 +36,7 @@ resources:
 
 ### `out`: Post message to Hangouts chat room
 
-Posts the given message to Google Hangouts channel that is corresponding to the webhook. It additionally includes information from the current running build as `$BUILD_PIPELINE_NAME` which is the **pipeline name**, `$BUILD_NAME` which reflects the **build id** shown in Concourse Web UI, and `$BUILD_JOB_NAME` which is the **job name** as defined in the pipeline, both build id and job name belongs to the current build for the job the resource is used under.
+Posts the given message to a Google Hangouts Room that corresponds to the provided webhook. It includes information from the current running build such as the pipeline name, job name, and build number as defined in the pipeline.
 
 #### Parameters
 
@@ -48,7 +46,7 @@ Posts the given message to Google Hangouts channel that is corresponding to the 
 
 ### Example
 
-You're suggested to use it under `try:` step, you don't want your build to fail if the resource failed
+It's recommended to use this resource in the `try:` step so that your build doesn't fail if the resource fails to send the message
 
 ```yaml
 jobs:
@@ -70,7 +68,7 @@ jobs:
       - try:
           put: hangouts
           params:
-            message: Job Started !
+            message: Job Started!
             post_url: true
 
       # .
@@ -85,13 +83,13 @@ jobs:
       try:
         put: hangouts
         params:
-          message: Job Failed !
+          message: Job Failed!
 
     on_success:
       try:
         put: hangouts
         params:
-          message: Job Succeeded !
+          message: Job Succeeded!
           post_url: false
 ```
 
@@ -99,58 +97,32 @@ jobs:
 This is a working example of a pipeline file that does absolutely nothing other then posting to Hangouts.
 
 You can test it as is after passing `hangouts_webhook` while setting up the pipeline or replacing `((hangouts_webhook))` in place with the webhook URL.
-
 ```yaml
+---
+groups:
+  - name: Test Group
+    jobs:
+      - Test_Job
 resource_types:
   - name: hangouts-resource
     type: docker-image
     source:
-      repository: cloudinn/concourse-hangouts-resource
+      repository: ghcr.io/barrelmaker97/concourse-hangouts-resource
       tag: latest
-
 resources:
-- name: hangouts
-  type: hangouts-resource
-  source:
-    webhook_url: ((hangouts_webhook))
-
-  # .
-  # .
-  # .
-  # Some other resources
-  # .
-  # .
-  # .
-
-
+  - name: hangouts
+    type: hangouts-resource
+    icon: google-hangouts
+    source:
+      webhook_url: ((hangouts_webhook))
+      post_url: true
 jobs:
-  - name: some-job
-    serial: true
+  - name: Test_Job
     plan:
-      - try:
-          put: hangouts
-          params:
-            message: Build Started !
-
-      # .
-      # .
-      # .
-      # Some steps to execute
-      # .
-      # .
-      # .
-
-    on_failure:
-      try:
-        put: hangouts
+      - put: hangouts
         params:
-          message: Build Failed !
-
-    on_success:
-      try:
-        put: hangouts
-        params:
-          message: Build Passed !
+        message: Greetings from Concourse!
+        post_url: true
 ```
 
 ## License
