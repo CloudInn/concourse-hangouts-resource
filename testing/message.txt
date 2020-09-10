@@ -1,1 +1,3 @@
-Message File Text
+Message File Text Line 1
+Message File Text Line 2
+Message File Text Line 3

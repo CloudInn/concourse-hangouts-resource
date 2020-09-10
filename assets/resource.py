@@ -5,7 +5,6 @@ import json
 import os
 import sys
 import requests
-import traceback
 
 
 # Construct the webhook request and send it.
@@ -72,21 +71,23 @@ def out_res(source, params, workspace):
     message_from_file = ""
     if os.path.isfile(message_file_path):
         with open(message_file_path, "r") as f:
-            message_from_file = f.read()
+            message_from_file = f.read().rstrip("\n")
+    else:
+        print(f"Message file {message_file} not found. Skipping", file=sys.stderr)
 
-    full_message = (message or "") + message_from_file.rstrip("\n")
     message_text = f"""
 Pipeline: {pipeline_name}
 Job: {job_name}
 Build: #{build_id}
-{full_message}
 {build_url if url_enabled else ''}
+{message or ""}
+{message_from_file}
 """
     status, text = send(url, message_text)
     api_res = json.loads(text)
 
-    print("Successfully posted to GoogleChat!")
-    print(f"Sent Message:\n{message_text}")
+    print("Message sent to Google Chat!")
+    print(f"Message Content:\n{message_text}")
     print(f"Confirmed Message:\n{api_res.get('text')}")
 
     return {
@@ -128,8 +129,6 @@ if __name__ == "__main__":
     except Exception as err:
         print("Something went wrong, not posting to Google Chat", file=sys.stderr)
         print(f"Error: {err}", file=sys.stderr)
-        print(f"Stacktrace:", file=sys.stderr)
-        traceback.print_exc(file=sys.stderr)
         print(
             json.dumps(
                 {"version": {}, "metadata": [{"name": "status", "value": "Failed"}]}
