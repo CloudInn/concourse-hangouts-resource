@@ -12,7 +12,7 @@ resource_types:
   - name: hangouts-resource
     type: docker-image
     source:
-      repository: cloudinn/concourse-hangouts-resource
+      repository: ghcr.io/barrelmaker97/concourse-hangouts-resource
       tag: latest
 ```
 
@@ -44,7 +44,7 @@ Posts the given message to Google Hangouts channel that is corresponding to the 
 
 * `message`: _Optional - (String)_. The message to post along the other information to Hangouts room.
 * `message_file` _Optional - (String)_. Path to file containing text to append to `message`)
-* `post_url` _Optional - (Boolean)_. Include link to the current job. (*Default:* Fall back to `post_url` in `source`)
+* `post_url` _Optional - (Boolean)_. Include link to the current job. (*Default:* `true`)
 
 ### Example
 
