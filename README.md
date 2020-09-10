@@ -28,7 +28,7 @@ resources:
     webhook_url: ((webhook_url))
 ```
 
-## Behaviour
+## Behavior
 
 ### `check`: Non-functional
 
