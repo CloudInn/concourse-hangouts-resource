@@ -75,54 +75,51 @@ def out_res(source, params, workspace):
             message_from_file = f.read()
 
     full_message = (message or "") + message_from_file.rstrip("\n")
-    text = """\
-Pipeline: {0}
-Job: #{1} {2}
-{3}\
-""".format(
-        pipeline_name, build_id, job_name, full_message
-    ) + (
-        "\n" + build_url if url_enabled else ""
-    )
-
-    response = {"version": {}, "metadata": []}
-
-    status, text = send(url, text)
+    message_text = f"""
+Pipeline: {pipeline_name}
+Job: {job_name}
+Build: #{build_id}
+{full_message}
+{build_url if url_enabled else ''}
+"""
+    status, text = send(url, message_text)
     api_res = json.loads(text)
 
     print("Successfully posted to GoogleChat!")
-    print(f"Message:\n{api_res.get('text')}")
+    print(f"Sent Message:\n{message_text}")
+    print(f"Confirmed Message:\n{api_res.get('text')}")
 
-    response["metadata"] = [
-        {"name": "status", "value": "Posted"},
-        {
-            "name": "sender_name",
-            "value": api_res.get("sender") and api_res["sender"].get("name"),
-        },
-        {
-            "name": "sender_display_name",
-            "value": api_res.get("sender") and api_res["sender"].get("displayName"),
-        },
-        {
-            "name": "space_name",
-            "value": api_res.get("space") and api_res["space"].get("name"),
-        },
-        {
-            "name": "space_type",
-            "value": api_res.get("space") and api_res["space"].get("type"),
-        },
-        {
-            "name": "space_display_name",
-            "value": api_res.get("space") and api_res["space"].get("displayName"),
-        },
-        {
-            "name": "thread_name",
-            "value": api_res.get("thread") and api_res["thread"].get("name"),
-        },
-        {"name": "create_time", "value": api_res.get("createTime")},
-    ]
-
-    return response
+    return {
+        "version": {},
+        "metadata": [
+            {"name": "status", "value": "Posted"},
+            {
+                "name": "sender_name",
+                "value": api_res.get("sender") and api_res["sender"].get("name"),
+            },
+            {
+                "name": "sender_display_name",
+                "value": api_res.get("sender") and api_res["sender"].get("displayName"),
+            },
+            {
+                "name": "space_name",
+                "value": api_res.get("space") and api_res["space"].get("name"),
+            },
+            {
+                "name": "space_type",
+                "value": api_res.get("space") and api_res["space"].get("type"),
+            },
+            {
+                "name": "space_display_name",
+                "value": api_res.get("space") and api_res["space"].get("displayName"),
+            },
+            {
+                "name": "thread_name",
+                "value": api_res.get("thread") and api_res["thread"].get("name"),
+            },
+            {"name": "create_time", "value": api_res.get("createTime")},
+        ],
+    }
 
 
 if __name__ == "__main__":
