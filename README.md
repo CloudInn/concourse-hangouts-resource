@@ -1,7 +1,6 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/barrelmaker97/concourse-hangouts-resource/badge/master)](https://www.codefactor.io/repository/github/barrelmaker97/concourse-hangouts-resource/overview/master)
-Concourse Google Hangouts Resource
-======================
 
+# Concourse Google Hangouts Resource
 A [Concourse](http://concourse.ci/) resource to post a message to Google Hangouts room using webhooks. The message includes the pipeline name, job name and build number which the resource is running under, and an optional message/message file.
 
 ## Resource Type Configuration
