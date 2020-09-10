@@ -14,7 +14,7 @@ resource_types:
       tag: latest
 ```
 
-## Source Configuration
+## Resource Configuration
 
 * `webhook_url`: _Required - (String)_. The webhook generated for Hangouts channel. (i.e. "https://chat.googleapis.com/v1/spaces/ABC/messages?key=DEF)
 
@@ -25,7 +25,7 @@ resources:
 - name: hangouts
   type: hangouts-resource
   source:
-    webhook_url: {{pipeline_alerts_webhook}}
+    webhook_url: ((webhook_url))
 ```
 
 ## Behaviour
@@ -44,7 +44,7 @@ Posts the given message to a Google Hangouts Room that corresponds to the provid
 * `message_file` _Optional - (String)_. Path to file containing text to append to `message`)
 * `post_url` _Optional - (Boolean)_. Include link to the current job. (*Default:* `true`)
 
-### Example
+### Usage Notes
 
 It's recommended to use this resource in the `try:` step so that your build doesn't fail if the resource fails to send the message
 
@@ -55,20 +55,8 @@ jobs:
       - try:
           put: hangouts
           params:
-            message: "Successfully released version: "
+            message: "Building version: "
             message_file: project/version.txt
-```
-
-## Suggested Use Case:
-
-```yaml
-jobs:
-  - name: some-job
-    plan:
-      - try:
-          put: hangouts
-          params:
-            message: Job Started!
             post_url: true
 
       # .
@@ -90,13 +78,12 @@ jobs:
         put: hangouts
         params:
           message: Job Succeeded!
-          post_url: false
 ```
 
-## Full example:
+## Complete Example:
 This is a working example of a pipeline file that does absolutely nothing other then posting to Hangouts.
 
-You can test it as is after passing `hangouts_webhook` while setting up the pipeline or replacing `((hangouts_webhook))` in place with the webhook URL.
+You can test it as is after passing `webhook_url` while setting up the pipeline or replacing `((webhook_url))` in place with the webhook URL.
 ```yaml
 ---
 groups:
@@ -114,7 +101,7 @@ resources:
     type: hangouts-resource
     icon: google-hangouts
     source:
-      webhook_url: ((hangouts_webhook))
+      webhook_url: ((webhook_url))
       post_url: true
 jobs:
   - name: Test_Job
