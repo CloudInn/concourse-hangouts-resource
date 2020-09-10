@@ -21,4 +21,5 @@ RUN /testing/test.sh && touch /test-success
 # Copy assets
 FROM dependencies as production
 COPY --from=test /test-success /
+COPY --from=lint /lint-success /
 COPY ./assets/ /opt/resource/
