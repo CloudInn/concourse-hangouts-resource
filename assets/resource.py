@@ -16,17 +16,26 @@ def send(url, msg):
 
 # Parse source/params, call the requested command and return the output.
 def run_resource(command_name, json_data, command_arguments):
-    data = json.loads(json_data)
-    source = data.get("source", dict())
-    params = data.get("params", dict())
-    if command_arguments:
-        workspace = command_arguments[0]
-    else:
-        workspace = ""
+    try:
+        data = json.loads(json_data)
+        source = data.get("source", dict())
+        params = data.get("params", dict())
+        if command_arguments:
+            workspace = command_arguments[0]
+        else:
+            workspace = ""
 
-    action = {"in": in_res, "out": out_res, "check": check_res}.get(command_name)
+        action = {"in": in_res, "out": out_res, "check": check_res}.get(command_name)
 
-    return action(source, params, workspace)
+        result = action(source, params, workspace)
+        print(json.dumps(result))
+        return result, True
+    except Exception as err:
+        result = {"version": {}, "metadata": [{"name": "status", "value": "Failed"}]}
+        print("Something went wrong, not posting to Google Chat", file=sys.stderr)
+        print(f"Error: {err}", file=sys.stderr)
+        print(json.dumps(result))
+        return result, False
 
 
 # Return empty version to keep Concourse happy.
@@ -117,17 +126,7 @@ Build: #{build_id}{build_url}
 
 
 if __name__ == "__main__":
-    try:
-        result = run_resource(
-            os.path.basename(__file__), sys.stdin.read(), sys.argv[1:]
-        )
-        print(json.dumps(result))
-    except Exception as err:
-        print("Something went wrong, not posting to Google Chat", file=sys.stderr)
-        print(f"Error: {err}", file=sys.stderr)
-        print(
-            json.dumps(
-                {"version": {}, "metadata": [{"name": "status", "value": "Failed"}]}
-            )
-        )
+    filename = os.path.basename(__file__)
+    result, success = run_resource(filename, sys.stdin.read(), sys.argv[1:])
+    if not success:
         sys.exit(1)

@@ -14,28 +14,48 @@ def test_send():
 
 def test_run_resource_check(basic_input):
     data = json.dumps(basic_input)
-    assert resource.run_resource("check", data, "") == []
+    assert resource.run_resource("check", data, "") == ([], True)
 
 
 def test_run_resource_in(basic_input):
     data = json.dumps(basic_input)
-    assert resource.run_resource("in", data, "") == {"version": {}}
+    assert resource.run_resource("in", data, "") == ({"version": {}}, True)
 
 
-def test_run_resource_out(basic_input, blank_output):
+def test_run_resource_out_basic(basic_input, blank_output):
     data = json.dumps(basic_input)
-    assert resource.run_resource("out", data, "") == blank_output
+    assert resource.run_resource("out", data, "") == (blank_output, True)
+
+
+def test_run_resource_out_add_url(basic_input, blank_output):
+    basic_input["params"]["post_url"] = True
+    data = json.dumps(basic_input)
+    assert resource.run_resource("out", data, "") == (blank_output, True)
+
+
+def test_run_resource_out_no_url(basic_input, blank_output):
+    basic_input["params"]["post_url"] = False
+    data = json.dumps(basic_input)
+    assert resource.run_resource("out", data, "") == (blank_output, True)
+
+
+def test_run_resource_out_bad_webhook(basic_input, failure_output):
+    basic_input["source"]["webhook_url"] = "https://httpbin.org/get"
+    data = json.dumps(basic_input)
+    assert resource.run_resource("out", data, "") == (failure_output, False)
+
+
+def test_run_resource_out_missing_webhook(basic_input, failure_output):
+    del basic_input["source"]["webhook_url"]
+    data = json.dumps(basic_input)
+    assert resource.run_resource("out", data, "") == (failure_output, False)
 
 
 @pytest.fixture
 def basic_input():
     return {
         "source": {"webhook_url": "https://httpbin.org/post"},
-        "params": {
-            "message": "Test Message",
-            "message_file": "testing/message.txt",
-            "post_url": True,
-        },
+        "params": {"message": "Test Message", "message_file": "testing/message.txt"},
     }
 
 
@@ -54,3 +74,8 @@ def blank_output():
             {"name": "create_time", "value": None},
         ],
     }
+
+
+@pytest.fixture
+def failure_output():
+    return {"version": {}, "metadata": [{"name": "status", "value": "Failed"}]}
