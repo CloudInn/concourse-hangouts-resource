@@ -1,4 +1,4 @@
-name: Docker
+name: Lint, Test, Build
 
 on:
   push:
@@ -10,8 +10,10 @@ on:
     tags:
       - v*
 
-  # Run tests for any PRs.
+  # Run tests for any PRs against master
   pull_request:
+    branches: 
+      - master
 
 env:
   # TODO: Change variable to your image's name.
@@ -19,22 +21,29 @@ env:
   DOCKER_BUILDKIT: 1
 
 jobs:
-  # Run tests.
-  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Run tests
-        run: |
-          if [ -f docker-compose.test.yml ]; then
-            docker-compose --file docker-compose.test.yml build
-            docker-compose --file docker-compose.test.yml run sut
-          else
-            docker build . --file Dockerfile
-          fi
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Test with pytest
+      run: |
+        pytest
 
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
