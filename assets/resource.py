@@ -26,8 +26,7 @@ def run_resource(command_name, json_data, command_arguments):
 
     action = {"in": in_res, "out": out_res, "check": check_res}.get(command_name)
 
-    output = action(source, params, workspace)
-    print(json.dumps(output))
+    return action(source, params, workspace)
 
 
 # Return empty version to keep Concourse happy.
@@ -50,7 +49,6 @@ def out_res(source, params, workspace):
     url_enabled = (
         params.get("post_url") if isinstance(params.get("post_url"), bool) else True
     )
-    build_uuid = os.getenv("BUILD_ID")
     build_id = os.getenv("BUILD_NAME")
     job_name = os.getenv("BUILD_JOB_NAME")
     pipeline_name = os.getenv("BUILD_PIPELINE_NAME")
@@ -120,7 +118,8 @@ Build: #{build_id}{build_url}
 
 if __name__ == "__main__":
     try:
-        run_resource(os.path.basename(__file__), sys.stdin.read(), sys.argv[1:])
+        result = run_resource(os.path.basename(__file__), sys.stdin.read(), sys.argv[1:])
+        print(json.dumps(result))
     except Exception as err:
         print("Something went wrong, not posting to Google Chat", file=sys.stderr)
         print(f"Error: {err}", file=sys.stderr)
