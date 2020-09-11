@@ -12,27 +12,6 @@ def test_send():
     assert test_message in message
 
 
-def test_check_res(basic_input):
-    source = basic_input.get("source")
-    params = basic_input.get("params")
-    workspace = ""
-    assert resource.check_res(source, params, workspace) == []
-
-
-def test_in_res(basic_input):
-    source = basic_input.get("source")
-    params = basic_input.get("params")
-    workspace = ""
-    assert resource.in_res(source, params, workspace) == {"version": {}}
-
-
-def test_out_res(basic_input, blank_output):
-    source = basic_input.get("source")
-    params = basic_input.get("params")
-    workspace = ""
-    assert resource.out_res(source, params, workspace) == blank_output
-
-
 def test_run_resource_check(basic_input):
     data = json.dumps(basic_input)
     assert resource.run_resource("check", data, "") == []
