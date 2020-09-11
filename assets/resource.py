@@ -118,7 +118,9 @@ Build: #{build_id}{build_url}
 
 if __name__ == "__main__":
     try:
-        result = run_resource(os.path.basename(__file__), sys.stdin.read(), sys.argv[1:])
+        result = run_resource(
+            os.path.basename(__file__), sys.stdin.read(), sys.argv[1:]
+        )
         print(json.dumps(result))
     except Exception as err:
         print("Something went wrong, not posting to Google Chat", file=sys.stderr)
