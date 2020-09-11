@@ -1,4 +1,5 @@
 [![Build Status](https://github.com/barrelmaker97/concourse-hangouts-resource/workflows/Docker/badge.svg)](https://github.com/users/barrelmaker97/packages/container/concourse-hangouts-resource/42048)
+[![Coverage Status](https://coveralls.io/repos/github/barrelmaker97/concourse-hangouts-resource/badge.svg?branch=master)](https://coveralls.io/github/barrelmaker97/concourse-hangouts-resource?branch=master)
 [![CodeFactor](https://www.codefactor.io/repository/github/barrelmaker97/concourse-hangouts-resource/badge/master)](https://www.codefactor.io/repository/github/barrelmaker97/concourse-hangouts-resource/overview/master)
 
 # Concourse Google Hangouts Resource
