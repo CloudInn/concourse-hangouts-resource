@@ -96,6 +96,7 @@ Build: #{build_id}{build_url}
         "metadata": [
             {"name": "status", "value": "Posted"},
             {"name": "message", "value": message},
+            {"name": "URL_sent", "value": url_enabled},
             {
                 "name": "sender_name",
                 "value": api_res.get("sender") and api_res["sender"].get("name"),

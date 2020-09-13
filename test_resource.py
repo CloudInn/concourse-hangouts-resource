@@ -57,6 +57,7 @@ def test_run_resource_out_add_url(basic_input, basic_output):
 
 def test_run_resource_out_no_url(basic_input, basic_output):
     basic_input["params"]["post_url"] = False
+    basic_output["metadata"][2]["value"] = False
     data = json.dumps(basic_input)
     assert resource.run_resource("out", data, "") == (basic_output, True)
 
@@ -88,6 +89,7 @@ def basic_output():
         "metadata": [
             {"name": "status", "value": "Posted"},
             {"name": "message", "value": "Test Message"},
+            {"name": "URL_sent", "value": True},
             {"name": "sender_name", "value": None},
             {"name": "sender_display_name", "value": None},
             {"name": "space_name", "value": None},
