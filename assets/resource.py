@@ -3,6 +3,7 @@ import json
 import os
 import sys
 import requests
+import pathlib
 
 
 # Construct the webhook request and send it.
@@ -21,9 +22,9 @@ def run_resource(command_name, json_data, command_arguments):
         source = data.get("source", dict())
         params = data.get("params", dict())
         if command_arguments:
-            workspace = command_arguments[0]
+            workspace = pathlib.Path(command_arguments[0]).resolve()
         else:
-            workspace = ""
+            workspace = None
 
         action = {"in": in_res, "out": out_res, "check": check_res}.get(command_name)
 

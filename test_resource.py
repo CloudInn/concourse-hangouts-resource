@@ -2,6 +2,7 @@
 import pytest
 import random
 import json
+import os
 from assets import resource
 
 
@@ -25,6 +26,13 @@ def test_run_resource_in(basic_input):
 def test_run_resource_out_basic(basic_input, blank_output):
     data = json.dumps(basic_input)
     assert resource.run_resource("out", data, "") == (blank_output, True)
+
+
+def test_run_resource_out_message_file(basic_input, blank_output, request):
+    basic_input["params"]["message_file"] = "testing/message.txt"
+    data = json.dumps(basic_input)
+    current_dir = request.fspath.dirname
+    assert resource.run_resource("out", data, [current_dir]) == (blank_output, True)
 
 
 def test_run_resource_out_add_url(basic_input, blank_output):
@@ -55,7 +63,7 @@ def test_run_resource_out_missing_webhook(basic_input, failure_output):
 def basic_input():
     return {
         "source": {"webhook_url": "https://httpbin.org/post"},
-        "params": {"message": "Test Message", "message_file": "testing/message.txt"},
+        "params": {"message": "Test Message"},
     }
 
 
