@@ -71,13 +71,14 @@ def out_res(source, params, workspace):
         else ""
     )
 
-    message_file_path = f"{workspace}/{message_file}"
     message_from_file = ""
-    if os.path.isfile(message_file_path):
-        with open(message_file_path, "r") as f:
-            message_from_file = f.read().rstrip("\n")
-    else:
-        print(f"Message file {message_file} not found. Skipping", file=sys.stderr)
+    if message_file:
+        message_file_path = f"{workspace}/{message_file}"
+        if os.path.isfile(message_file_path):
+            with open(message_file_path, "r") as f:
+                message_from_file = f.read().rstrip("\n")
+        else:
+            print(f"Message file {message_file} not found. Skipping", file=sys.stderr)
 
     message_text = f"""
 Pipeline: {pipeline_name}
@@ -91,7 +92,6 @@ Build: #{build_id}{build_url}
 
     print("Message sent to Google Chat!")
     print(f"Message Content:\n{message_text}")
-    print(f"Confirmed Message:\n{api_res.get('text')}")
 
     return {
         "version": {},

@@ -28,6 +28,12 @@ def test_run_resource_out_basic(basic_input, blank_output):
     assert resource.run_resource("out", data, "") == (blank_output, True)
 
 
+def test_run_resource_out_no_message(basic_input, blank_output):
+    del basic_input["params"]["message"]
+    data = json.dumps(basic_input)
+    assert resource.run_resource("out", data, "") == (blank_output, True)
+
+
 def test_run_resource_out_message_file(basic_input, blank_output, request):
     basic_input["params"]["message_file"] = "message.txt"
     data = json.dumps(basic_input)
