@@ -52,24 +52,22 @@ def in_res(source, params, workspace):
 # Extract required params for out, construct message and send it.
 def out_res(source, params, workspace):
     url = source.get("webhook_url")
-    if url is None:
+    if not url:
         raise Exception("Webhook URL missing from configuration")
     message = params.get("message")
     message_file = params.get("message_file")
     url_enabled = (
         params.get("post_url") if isinstance(params.get("post_url"), bool) else True
     )
-    build_id = os.getenv("BUILD_NAME")
-    job_name = os.getenv("BUILD_JOB_NAME")
     pipeline_name = os.getenv("BUILD_PIPELINE_NAME")
-    team_name = os.getenv("BUILD_TEAM_NAME")
-    atc_url = os.getenv("ATC_EXTERNAL_URL")
+    job_name = os.getenv("BUILD_JOB_NAME")
+    build_id = os.getenv("BUILD_NAME")
 
-    build_url = (
-        f"\n{atc_url}/teams/{team_name}/pipelines/{pipeline_name}/jobs/{job_name}/builds/{build_id}"
-        if url_enabled
-        else ""
-    )
+    build_url = ""
+    if url_enabled:
+        team_name = os.getenv("BUILD_TEAM_NAME")
+        atc_url = os.getenv("ATC_EXTERNAL_URL")
+        build_url = f"\n{atc_url}/teams/{team_name}/pipelines/{pipeline_name}/jobs/{job_name}/builds/{build_id}"
 
     message_from_file = ""
     if message_file:
