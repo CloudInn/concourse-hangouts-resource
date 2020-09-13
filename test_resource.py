@@ -42,6 +42,13 @@ def test_run_resource_out_message_file(basic_input, basic_output, request):
     assert resource.run_resource("out", data, [current_dir]) == (basic_output, True)
 
 
+def test_run_resource_out_missing_message_file(basic_input, basic_output, request):
+    basic_input["params"]["message_file"] = "not_a_message.txt"
+    data = json.dumps(basic_input)
+    current_dir = request.fspath.dirname
+    assert resource.run_resource("out", data, [current_dir]) == (basic_output, True)
+
+
 def test_run_resource_out_add_url(basic_input, basic_output):
     basic_input["params"]["post_url"] = True
     data = json.dumps(basic_input)
