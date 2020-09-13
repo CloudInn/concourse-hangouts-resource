@@ -95,6 +95,7 @@ Build: #{build_id}{build_url}
         "version": {},
         "metadata": [
             {"name": "status", "value": "Posted"},
+            {"name": "message", "value": message},
             {
                 "name": "sender_name",
                 "value": api_res.get("sender") and api_res["sender"].get("name"),

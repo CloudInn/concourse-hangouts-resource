@@ -23,34 +23,35 @@ def test_run_resource_in(basic_input):
     assert resource.run_resource("in", data, "") == ({"version": {}}, True)
 
 
-def test_run_resource_out_basic(basic_input, blank_output):
+def test_run_resource_out_basic(basic_input, basic_output):
     data = json.dumps(basic_input)
-    assert resource.run_resource("out", data, "") == (blank_output, True)
+    assert resource.run_resource("out", data, "") == (basic_output, True)
 
 
-def test_run_resource_out_no_message(basic_input, blank_output):
+def test_run_resource_out_no_message(basic_input, basic_output):
     del basic_input["params"]["message"]
+    basic_output["metadata"][1]["value"] = None
     data = json.dumps(basic_input)
-    assert resource.run_resource("out", data, "") == (blank_output, True)
+    assert resource.run_resource("out", data, "") == (basic_output, True)
 
 
-def test_run_resource_out_message_file(basic_input, blank_output, request):
+def test_run_resource_out_message_file(basic_input, basic_output, request):
     basic_input["params"]["message_file"] = "message.txt"
     data = json.dumps(basic_input)
     current_dir = request.fspath.dirname
-    assert resource.run_resource("out", data, [current_dir]) == (blank_output, True)
+    assert resource.run_resource("out", data, [current_dir]) == (basic_output, True)
 
 
-def test_run_resource_out_add_url(basic_input, blank_output):
+def test_run_resource_out_add_url(basic_input, basic_output):
     basic_input["params"]["post_url"] = True
     data = json.dumps(basic_input)
-    assert resource.run_resource("out", data, "") == (blank_output, True)
+    assert resource.run_resource("out", data, "") == (basic_output, True)
 
 
-def test_run_resource_out_no_url(basic_input, blank_output):
+def test_run_resource_out_no_url(basic_input, basic_output):
     basic_input["params"]["post_url"] = False
     data = json.dumps(basic_input)
-    assert resource.run_resource("out", data, "") == (blank_output, True)
+    assert resource.run_resource("out", data, "") == (basic_output, True)
 
 
 def test_run_resource_out_bad_webhook(basic_input, failure_output):
@@ -74,11 +75,12 @@ def basic_input():
 
 
 @pytest.fixture
-def blank_output():
+def basic_output():
     return {
         "version": {},
         "metadata": [
             {"name": "status", "value": "Posted"},
+            {"name": "message", "value": "Test Message"},
             {"name": "sender_name", "value": None},
             {"name": "sender_display_name", "value": None},
             {"name": "space_name", "value": None},
