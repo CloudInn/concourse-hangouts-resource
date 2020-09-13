@@ -29,7 +29,7 @@ def test_run_resource_out_basic(basic_input, blank_output):
 
 
 def test_run_resource_out_message_file(basic_input, blank_output, request):
-    basic_input["params"]["message_file"] = "testing/message.txt"
+    basic_input["params"]["message_file"] = "message.txt"
     data = json.dumps(basic_input)
     current_dir = request.fspath.dirname
     assert resource.run_resource("out", data, [current_dir]) == (blank_output, True)

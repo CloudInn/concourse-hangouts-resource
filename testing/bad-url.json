@@ -1,9 +1,0 @@
-{
-	"source": {
-		"webhook_url": "https://httpbin.org/get"
-	},
-	"params": {
-		"message": "Test Message",
-		"message_file": "./message.txt"
-	}
-}

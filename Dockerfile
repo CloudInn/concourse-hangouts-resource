@@ -15,8 +15,10 @@ RUN pip install -r requirements.txt
 
 # Run tests
 FROM dependencies as test
-COPY ./ /
-RUN /testing/test.sh && touch /test-success
+RUN pip install pytest
+COPY ./ /testdir/
+WORKDIR /testdir
+RUN pytest -vv && touch /test-success
 
 # Copy assets
 FROM dependencies as production
