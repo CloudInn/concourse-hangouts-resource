@@ -96,6 +96,7 @@ Build: #{build_id}{build_url}
         "metadata": [
             {"name": "status", "value": "Posted"},
             {"name": "message", "value": message},
+            {"name": "message_file", "value": message_file},
             {"name": "URL_sent", "value": url_enabled},
             {
                 "name": "sender_name",

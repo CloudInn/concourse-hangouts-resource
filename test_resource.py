@@ -37,6 +37,7 @@ def test_run_resource_out_no_message(basic_input, basic_output):
 
 def test_run_resource_out_message_file(basic_input, basic_output, request):
     basic_input["params"]["message_file"] = "message.txt"
+    basic_output["metadata"][2]["value"] = "message.txt"
     data = json.dumps(basic_input)
     current_dir = request.fspath.dirname
     assert resource.run_resource("out", data, [current_dir]) == (basic_output, True)
@@ -44,6 +45,7 @@ def test_run_resource_out_message_file(basic_input, basic_output, request):
 
 def test_run_resource_out_missing_message_file(basic_input, basic_output, request):
     basic_input["params"]["message_file"] = "not_a_message.txt"
+    basic_output["metadata"][2]["value"] = "not_a_message.txt"
     data = json.dumps(basic_input)
     current_dir = request.fspath.dirname
     assert resource.run_resource("out", data, [current_dir]) == (basic_output, True)
@@ -57,7 +59,7 @@ def test_run_resource_out_add_url(basic_input, basic_output):
 
 def test_run_resource_out_no_url(basic_input, basic_output):
     basic_input["params"]["post_url"] = False
-    basic_output["metadata"][2]["value"] = False
+    basic_output["metadata"][3]["value"] = False
     data = json.dumps(basic_input)
     assert resource.run_resource("out", data, "") == (basic_output, True)
 
@@ -89,6 +91,7 @@ def basic_output():
         "metadata": [
             {"name": "status", "value": "Posted"},
             {"name": "message", "value": "Test Message"},
+            {"name": "message_file", "value": None},
             {"name": "URL_sent", "value": True},
             {"name": "sender_name", "value": None},
             {"name": "sender_display_name", "value": None},
