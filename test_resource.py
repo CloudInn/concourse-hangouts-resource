@@ -60,6 +60,7 @@ def test_run_resource_out_add_url(basic_input, basic_output, env_vars):
 def test_run_resource_out_no_url(basic_input, basic_output, env_vars):
     basic_input["params"]["post_url"] = False
     basic_output["metadata"][3]["value"] = "False"
+    basic_output["metadata"][4]["value"] = ""
     data = json.dumps(basic_input)
     assert resource.run_resource("out", data, "") == (basic_output, True)
 
@@ -108,6 +109,7 @@ def basic_output():
             {"name": "Message", "value": "Test Message"},
             {"name": "Message File Name", "value": "None"},
             {"name": "URL Sent", "value": "True"},
+            {"name": "Build URL", "value": "https://not.a.site/teams/Test_Team/pipelines/Test_Pipeline/jobs/Test_Job/builds/1234"},
             {"name": "Pipeline Name", "value": "Test_Pipeline"},
             {"name": "Job Name", "value": "Test_Job"},
             {"name": "Build Number", "value": "1234"},

@@ -67,7 +67,7 @@ def out_res(source, params, workspace):
     if url_enabled:
         team_name = os.getenv("BUILD_TEAM_NAME")
         atc_url = os.getenv("ATC_EXTERNAL_URL")
-        build_url = f"\n{atc_url}/teams/{team_name}/pipelines/{pipeline_name}/jobs/{job_name}/builds/{build_id}"
+        build_url = f"{atc_url}/teams/{team_name}/pipelines/{pipeline_name}/jobs/{job_name}/builds/{build_id}"
 
     message_from_file = ""
     if message_file:
@@ -80,7 +80,8 @@ def out_res(source, params, workspace):
 
     message_text = f"""Pipeline: {pipeline_name}
 Job: {job_name}
-Build: #{build_id}{build_url}
+Build: #{build_id}
+{build_url}
 {message or ""}
 {message_from_file}"""
     status, text = send(url, message_text)
@@ -96,6 +97,7 @@ Build: #{build_id}{build_url}
             {"name": "Message", "value": str(message)},
             {"name": "Message File Name", "value": str(message_file)},
             {"name": "URL Sent", "value": str(url_enabled)},
+            {"name": "Build URL", "value": str(build_url)},
             {"name": "Pipeline Name", "value": str(pipeline_name)},
             {"name": "Job Name", "value": str(job_name)},
             {"name": "Build Number", "value": str(build_id)},
