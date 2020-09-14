@@ -82,8 +82,7 @@ def out_res(source, params, workspace):
 Job: {job_name}
 Build: #{build_id}{build_url}
 {message or ""}
-{message_from_file}
-"""
+{message_from_file}"""
     status, text = send(url, message_text)
     api_res = json.loads(text)
 
