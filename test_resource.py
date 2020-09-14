@@ -23,19 +23,19 @@ def test_run_resource_in(basic_input):
     assert resource.run_resource("in", data, "") == ({"version": {}}, True)
 
 
-def test_run_resource_out_basic(basic_input, basic_output):
+def test_run_resource_out_basic(basic_input, basic_output, env_vars):
     data = json.dumps(basic_input)
     assert resource.run_resource("out", data, "") == (basic_output, True)
 
 
-def test_run_resource_out_no_message(basic_input, basic_output):
+def test_run_resource_out_no_message(basic_input, basic_output, env_vars):
     del basic_input["params"]["message"]
     basic_output["metadata"][1]["value"] = None
     data = json.dumps(basic_input)
     assert resource.run_resource("out", data, "") == (basic_output, True)
 
 
-def test_run_resource_out_message_file(basic_input, basic_output, request):
+def test_run_resource_out_message_file(basic_input, basic_output, request, env_vars):
     basic_input["params"]["message_file"] = "message.txt"
     basic_output["metadata"][2]["value"] = "message.txt"
     data = json.dumps(basic_input)
@@ -43,21 +43,21 @@ def test_run_resource_out_message_file(basic_input, basic_output, request):
     assert resource.run_resource("out", data, [current_dir]) == (basic_output, True)
 
 
-def test_run_resource_out_missing_message_file(basic_input, basic_output, request):
+def test_run_resource_out_missing_message_file(basic_input, basic_output, env_vars):
     basic_input["params"]["message_file"] = "not_a_message.txt"
     basic_output["metadata"][2]["value"] = "not_a_message.txt"
     data = json.dumps(basic_input)
-    current_dir = request.fspath.dirname
+    current_dir = os.getcwd()
     assert resource.run_resource("out", data, [current_dir]) == (basic_output, True)
 
 
-def test_run_resource_out_add_url(basic_input, basic_output):
+def test_run_resource_out_add_url(basic_input, basic_output, env_vars):
     basic_input["params"]["post_url"] = True
     data = json.dumps(basic_input)
     assert resource.run_resource("out", data, "") == (basic_output, True)
 
 
-def test_run_resource_out_no_url(basic_input, basic_output):
+def test_run_resource_out_no_url(basic_input, basic_output, env_vars):
     basic_input["params"]["post_url"] = False
     basic_output["metadata"][3]["value"] = False
     data = json.dumps(basic_input)
@@ -74,6 +74,21 @@ def test_run_resource_out_missing_webhook(basic_input, failure_output):
     del basic_input["source"]["webhook_url"]
     data = json.dumps(basic_input)
     assert resource.run_resource("out", data, "") == (failure_output, False)
+
+
+@pytest.fixture
+def env_vars():
+    os.environ["BUILD_PIPELINE_NAME"] = "Test_Pipeline"
+    os.environ["BUILD_JOB_NAME"] = "Test_Job"
+    os.environ["BUILD_NAME"] = "1234"
+    os.environ["BUILD_TEAM_NAME"] = "Test_Team"
+    os.environ["ATC_EXTERNAL_URL"] = "https://not.a.site"
+    yield True
+    del os.environ["BUILD_PIPELINE_NAME"]
+    del os.environ["BUILD_JOB_NAME"]
+    del os.environ["BUILD_NAME"]
+    del os.environ["BUILD_TEAM_NAME"]
+    del os.environ["ATC_EXTERNAL_URL"]
 
 
 @pytest.fixture
