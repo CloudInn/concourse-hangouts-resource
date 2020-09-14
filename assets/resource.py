@@ -92,35 +92,38 @@ Build: #{build_id}{build_url}
     return {
         "version": {},
         "metadata": [
-            {"name": "status", "value": "Posted"},
-            {"name": "message", "value": str(message)},
-            {"name": "message_file", "value": str(message_file)},
-            {"name": "URL_sent", "value": str(url_enabled)},
+            {"name": "Status", "value": "Posted"},
+            {"name": "Message", "value": str(message)},
+            {"name": "Message File Name", "value": str(message_file)},
+            {"name": "URL Sent", "value": str(url_enabled)},
+            {"name": "Pipeline Name", "value": str(pipeline_name)},
+            {"name": "Job Name", "value": str(job_name)},
+            {"name": "Build Number", "value": str(build_id)},
             {
-                "name": "sender_name",
+                "name": "Sender Name",
                 "value": api_res.get("sender") and api_res["sender"].get("name"),
             },
             {
-                "name": "sender_display_name",
+                "name": "Sender Display Name",
                 "value": api_res.get("sender") and api_res["sender"].get("displayName"),
             },
             {
-                "name": "space_name",
+                "name": "Space Name",
                 "value": api_res.get("space") and api_res["space"].get("name"),
             },
             {
-                "name": "space_type",
-                "value": api_res.get("space") and api_res["space"].get("type"),
-            },
-            {
-                "name": "space_display_name",
+                "name": "Space Display Name",
                 "value": api_res.get("space") and api_res["space"].get("displayName"),
             },
             {
-                "name": "thread_name",
+                "name": "Space Type",
+                "value": api_res.get("space") and api_res["space"].get("type"),
+            },
+            {
+                "name": "Thread Name",
                 "value": api_res.get("thread") and api_res["thread"].get("name"),
             },
-            {"name": "create_time", "value": api_res.get("createTime")},
+            {"name": "Time Created", "value": api_res.get("createTime")},
         ],
     }
 
