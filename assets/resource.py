@@ -29,13 +29,13 @@ def run_resource(command_name, json_data, command_arguments):
         action = {"in": in_res, "out": out_res, "check": check_res}.get(command_name)
 
         result = action(source, params, workspace)
-        print(json.dumps(result))
+        print(json.dumps(result, indent=2))
         return result, True
     except Exception as err:
         result = {"version": {}, "metadata": [{"name": "status", "value": "Failed"}]}
         print("Something went wrong, not posting to Google Chat", file=sys.stderr)
         print(f"Error: {err}", file=sys.stderr)
-        print(json.dumps(result))
+        print(json.dumps(result, indent=2))
         return result, False
 
 
