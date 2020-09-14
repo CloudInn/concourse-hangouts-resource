@@ -78,8 +78,7 @@ def out_res(source, params, workspace):
         else:
             print(f"Message file {message_file} not found. Skipping", file=sys.stderr)
 
-    message_text = f"""
-Pipeline: {pipeline_name}
+    message_text = f"""Pipeline: {pipeline_name}
 Job: {job_name}
 Build: #{build_id}{build_url}
 {message or ""}
@@ -88,8 +87,8 @@ Build: #{build_id}{build_url}
     status, text = send(url, message_text)
     api_res = json.loads(text)
 
-    print("Message sent to Google Chat!")
-    print(f"Message Content\n{message_text}")
+    print("Message sent to Google Chat!", file=sys.stderr)
+    print(f"Message Content:\n{message_text}", file=sys.stderr)
 
     return {
         "version": {},
