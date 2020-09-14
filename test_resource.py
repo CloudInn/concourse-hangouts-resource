@@ -30,7 +30,7 @@ def test_run_resource_out_basic(basic_input, basic_output, env_vars):
 
 def test_run_resource_out_no_message(basic_input, basic_output, env_vars):
     del basic_input["params"]["message"]
-    basic_output["metadata"][1]["value"] = None
+    basic_output["metadata"][1]["value"] = "None"
     data = json.dumps(basic_input)
     assert resource.run_resource("out", data, "") == (basic_output, True)
 
@@ -59,7 +59,7 @@ def test_run_resource_out_add_url(basic_input, basic_output, env_vars):
 
 def test_run_resource_out_no_url(basic_input, basic_output, env_vars):
     basic_input["params"]["post_url"] = False
-    basic_output["metadata"][3]["value"] = False
+    basic_output["metadata"][3]["value"] = "False"
     data = json.dumps(basic_input)
     assert resource.run_resource("out", data, "") == (basic_output, True)
 
@@ -106,8 +106,8 @@ def basic_output():
         "metadata": [
             {"name": "status", "value": "Posted"},
             {"name": "message", "value": "Test Message"},
-            {"name": "message_file", "value": None},
-            {"name": "URL_sent", "value": True},
+            {"name": "message_file", "value": "None"},
+            {"name": "URL_sent", "value": "True"},
             {"name": "sender_name", "value": None},
             {"name": "sender_display_name", "value": None},
             {"name": "space_name", "value": None},
