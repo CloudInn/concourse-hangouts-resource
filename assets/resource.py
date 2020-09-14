@@ -88,7 +88,6 @@ Build: #{build_id}
     api_res = json.loads(text)
 
     print("Message sent to Google Chat!", file=sys.stderr)
-    print(f"Message Content:\n{message_text}", file=sys.stderr)
 
     return {
         "version": {},
