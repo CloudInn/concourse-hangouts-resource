@@ -105,14 +105,13 @@ resources:
     icon: google-hangouts
     source:
       webhook_url: ((webhook_url))
-      post_url: true
 jobs:
   - name: Test_Job
     plan:
       - put: hangouts
         params:
-        message: Greetings from Concourse!
-        post_url: true
+          message: Greetings from Concourse!
+          post_url: true
 ```
 
 ## License
