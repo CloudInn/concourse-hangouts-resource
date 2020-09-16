@@ -65,6 +65,12 @@ def test_run_resource_out_no_url(basic_input, basic_output, env_vars):
     assert resource.run_resource("out", data, "") == (basic_output, True)
 
 
+def test_run_resource_out_webhook_with_params(basic_input, basic_output, env_vars):
+    basic_input["source"]["webhook_url"] = "https://httpbin.org/post?test=test"
+    data = json.dumps(basic_input)
+    assert resource.run_resource("out", data, "") == (basic_output, True)
+
+
 def test_run_resource_out_bad_webhook(basic_input, failure_output):
     basic_input["source"]["webhook_url"] = "https://httpbin.org/get"
     data = json.dumps(basic_input)
