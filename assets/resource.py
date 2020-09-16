@@ -108,6 +108,7 @@ Build: #{build_id}
             {"name": "Message File Name", "value": str(message_file)},
             {"name": "URL Sent", "value": str(url_enabled)},
             {"name": "Build URL", "value": str(build_url)},
+            {"name": "Thread Created", "value": str(create_thread)},
             {"name": "Pipeline Name", "value": str(pipeline_name)},
             {"name": "Job Name", "value": str(job_name)},
             {"name": "Build Number", "value": str(build_id)},

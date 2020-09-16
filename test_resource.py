@@ -123,6 +123,7 @@ def basic_output():
             {"name": "Message File Name", "value": "None"},
             {"name": "URL Sent", "value": "True"},
             {"name": "Build URL", "value": "https://not.a.site/teams/Test_Team/pipelines/Test_Pipeline/jobs/Test_Job/builds/1234"},
+            {"name": "Thread Created", "value": "False"},
             {"name": "Pipeline Name", "value": "Test_Pipeline"},
             {"name": "Job Name", "value": "Test_Job"},
             {"name": "Build Number", "value": "1234"},
