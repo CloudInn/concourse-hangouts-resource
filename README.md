@@ -44,6 +44,7 @@ Posts the given message to a Google Hangouts Room that corresponds to the provid
 * `message`: _Optional - (String)_. The message to post along the other information to Hangouts room.
 * `message_file` _Optional - (String)_. Path to file containing text to append to `message`)
 * `post_url` _Optional - (Boolean)_. Include link to the current job. (*Default:* `true`)
+* `create_thread` _Optional - (Boolean)_. Create a new thread in the chat room for each message. (*Default:* `false`)
 
 ### Example
 
@@ -59,6 +60,7 @@ jobs:
             message: "Building version: "
             message_file: project/version.txt
             post_url: true
+            create_thread: false
 
       # .
       # .
@@ -74,6 +76,7 @@ jobs:
         params:
           message: Job Failed!
           post_url: false
+          create_thread: false
 
     on_success:
       try:
@@ -81,6 +84,7 @@ jobs:
         params:
           message: Job Succeeded!
           post_url: false
+          create_thread: false
 ```
 
 ## Complete Example:
@@ -112,6 +116,7 @@ jobs:
         params:
           message: Greetings from Concourse!
           post_url: true
+          create_thread: false
 ```
 
 ## License
