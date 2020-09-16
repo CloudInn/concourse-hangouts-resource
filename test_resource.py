@@ -35,6 +35,19 @@ def test_run_resource_out_basic(basic_input, basic_output, env_vars):
     assert resource.run_resource("out", data, "") == (basic_output, True)
 
 
+def test_run_resource_out_thread(basic_input, basic_output, env_vars):
+    basic_input["params"]["create_thread"] = True
+    basic_output["metadata"][5]["value"] = "True"
+    data = json.dumps(basic_input)
+    assert resource.run_resource("out", data, "") == (basic_output, True)
+
+
+def test_run_resource_out_no_thread(basic_input, basic_output, env_vars):
+    basic_input["params"]["create_thread"] = False
+    data = json.dumps(basic_input)
+    assert resource.run_resource("out", data, "") == (basic_output, True)
+
+
 def test_run_resource_out_no_message(basic_input, basic_output, env_vars):
     del basic_input["params"]["message"]
     basic_output["metadata"][1]["value"] = "None"
