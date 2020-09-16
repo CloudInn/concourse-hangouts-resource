@@ -8,16 +8,17 @@ import urllib
 
 
 # Construct the webhook request and send it.
-def send(url, msg):
+def send(url, msg, create_thread):
     headers = {"Content-Type": "application/json; charset=UTF-8"}
     body = {"text": msg}
-    params = {"threadKey": "concoursethreadkey"}
-    url_parts = list(urllib.parse.urlparse(url))
-    query = dict(urllib.parse.parse_qsl(url_parts[4]))
-    query.update(params)
-    url_parts[4] = urllib.parse.urlencode(query)
-    thread_url = urllib.parse.urlunparse(url_parts)
-    response = requests.post(thread_url, json=body, headers=headers)
+    if not create_thread:
+        params = {"threadKey": "concoursethreadkey"}
+        url_parts = list(urllib.parse.urlparse(url))
+        query = dict(urllib.parse.parse_qsl(url_parts[4]))
+        query.update(params)
+        url_parts[4] = urllib.parse.urlencode(query)
+        url = urllib.parse.urlunparse(url_parts)
+    response = requests.post(url, json=body, headers=headers)
     response.raise_for_status()
     return (response.status_code, response.text)
 
@@ -66,6 +67,9 @@ def out_res(source, params, workspace):
     url_enabled = (
         params.get("post_url") if isinstance(params.get("post_url"), bool) else True
     )
+    create_thread = (
+        params.get("create_thread") if isinstance(params.get("create_thread"), bool) else False
+    )
     pipeline_name = os.getenv("BUILD_PIPELINE_NAME")
     job_name = os.getenv("BUILD_JOB_NAME")
     build_id = os.getenv("BUILD_NAME")
@@ -91,7 +95,7 @@ Build: #{build_id}
 {build_url}
 {message or ""}
 {message_from_file}"""
-    status, text = send(url, message_text)
+    status, text = send(url, message_text, create_thread)
     api_res = json.loads(text)
 
     print("Message sent to Google Chat!", file=sys.stderr)

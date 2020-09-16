@@ -6,9 +6,16 @@ import os
 from assets import resource
 
 
-def test_send():
+def test_send_no_thread():
     test_message = str(random.getrandbits(128))
-    code, message = resource.send("https://httpbin.org/post", test_message)
+    code, message = resource.send("https://httpbin.org/post", test_message, False)
+    assert code == 200
+    assert test_message in message
+
+
+def test_send_thread():
+    test_message = str(random.getrandbits(128))
+    code, message = resource.send("https://httpbin.org/post", test_message, True)
     assert code == 200
     assert test_message in message
 
