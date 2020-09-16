@@ -10,7 +10,8 @@ import pathlib
 def send(url, msg):
     headers = {"Content-Type": "application/json; charset=UTF-8"}
     body = {"text": msg}
-    response = requests.post(url, json=body, headers=headers)
+    thread_url = f"{url}&threadKey=concoursethreadkey"
+    response = requests.post(thread_url, json=body, headers=headers)
     response.raise_for_status()
     return (response.status_code, response.text)
 
