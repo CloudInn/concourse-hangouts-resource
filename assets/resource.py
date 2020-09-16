@@ -4,13 +4,19 @@ import os
 import sys
 import requests
 import pathlib
+import urllib
 
 
 # Construct the webhook request and send it.
 def send(url, msg):
     headers = {"Content-Type": "application/json; charset=UTF-8"}
     body = {"text": msg}
-    thread_url = f"{url}&threadKey=concoursethreadkey"
+    params = {"threadKey": "concoursethreadkey"}
+    url_parts = list(urllib.parse.urlparse(url))
+    query = dict(urllib.parse.parse_qsl(url_parts[4]))
+    query.update(params)
+    url_parts[4] = urllib.parse.urlencode(query)
+    thread_url = urllib.parse.urlunparse(url_parts)
     response = requests.post(thread_url, json=body, headers=headers)
     response.raise_for_status()
     return (response.status_code, response.text)
