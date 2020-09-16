@@ -8,7 +8,7 @@ from assets import resource
 
 def test_send():
     test_message = str(random.getrandbits(128))
-    code, message = resource.send("https://httpbin.org/post?test=test", test_message)
+    code, message = resource.send("https://httpbin.org/post", test_message)
     assert code == 200
     assert test_message in message
 
@@ -66,7 +66,7 @@ def test_run_resource_out_no_url(basic_input, basic_output, env_vars):
 
 
 def test_run_resource_out_bad_webhook(basic_input, failure_output):
-    basic_input["source"]["webhook_url"] = "https://httpbin.org/get?test=test"
+    basic_input["source"]["webhook_url"] = "https://httpbin.org/get"
     data = json.dumps(basic_input)
     assert resource.run_resource("out", data, "") == (failure_output, False)
 
@@ -95,7 +95,7 @@ def env_vars():
 @pytest.fixture
 def basic_input():
     return {
-        "source": {"webhook_url": "https://httpbin.org/post?test=test"},
+        "source": {"webhook_url": "https://httpbin.org/post"},
         "params": {"message": "Test Message"},
     }
 
