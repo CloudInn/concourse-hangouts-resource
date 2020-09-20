@@ -128,6 +128,7 @@ def basic_input():
 
 @pytest.fixture
 def basic_output():
+    url = "https://not.a.site/teams/Test_Team/pipelines/Test_Pipeline/jobs/Test_Job/builds/1234"
     return {
         "version": {},
         "metadata": [
@@ -135,7 +136,7 @@ def basic_output():
             {"name": "Message", "value": "Test Message"},
             {"name": "Message File Name", "value": "None"},
             {"name": "URL Sent", "value": "True"},
-            {"name": "Build URL", "value": "https://not.a.site/teams/Test_Team/pipelines/Test_Pipeline/jobs/Test_Job/builds/1234"},
+            {"name": "Build URL", "value": url},
             {"name": "Thread Created", "value": "False"},
             {"name": "Pipeline Name", "value": "Test_Pipeline"},
             {"name": "Job Name", "value": "Test_Job"},
