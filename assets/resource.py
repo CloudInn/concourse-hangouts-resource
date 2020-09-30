@@ -79,7 +79,7 @@ def out_res(source, params, workspace):
 
     job_info = ""
     if info_enabled:
-        job_info = "Pipeline: {pipeline_name}\nJob: {job_name}\nBuild: #{build_id}"
+        job_info = f"Pipeline: {pipeline_name}\nJob: {job_name}\nBuild: #{build_id}"
 
     build_url = ""
     if url_enabled:
