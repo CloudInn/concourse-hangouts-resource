@@ -71,6 +71,19 @@ def test_run_resource_out_missing_message_file(basic_input, basic_output, env_va
     assert resource.run_resource("out", data, [current_dir]) == (basic_output, True)
 
 
+def test_run_resource_out_add_info(basic_input, basic_output, env_vars):
+    basic_input["params"]["post_info"] = True
+    data = json.dumps(basic_input)
+    assert resource.run_resource("out", data, "") == (basic_output, True)
+
+
+def test_run_resource_out_no_info(basic_input, basic_output, env_vars):
+    basic_input["params"]["post_info"] = False
+    basic_output["metadata"][9]["value"] = "False"
+    data = json.dumps(basic_input)
+    assert resource.run_resource("out", data, "") == (basic_output, True)
+
+
 def test_run_resource_out_add_url(basic_input, basic_output, env_vars):
     basic_input["params"]["post_url"] = True
     data = json.dumps(basic_input)
@@ -141,6 +154,7 @@ def basic_output():
             {"name": "Pipeline Name", "value": "Test_Pipeline"},
             {"name": "Job Name", "value": "Test_Job"},
             {"name": "Build Number", "value": "1234"},
+            {"name": "Info Sent", "value": "True"},
             {"name": "Sender Name", "value": None},
             {"name": "Sender Display Name", "value": None},
             {"name": "Space Name", "value": None},

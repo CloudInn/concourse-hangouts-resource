@@ -67,12 +67,19 @@ def out_res(source, params, workspace):
     url_enabled = (
         params.get("post_url") if isinstance(params.get("post_url"), bool) else True
     )
+    info_enabled = (
+        params.get("post_info") if isinstance(params.get("post_info"), bool) else True
+    )
     create_thread = (
         params.get("create_thread") if isinstance(params.get("create_thread"), bool) else False
     )
     pipeline_name = os.getenv("BUILD_PIPELINE_NAME")
     job_name = os.getenv("BUILD_JOB_NAME")
     build_id = os.getenv("BUILD_NAME")
+
+    job_info = ""
+    if info_enabled:
+        job_info = "Pipeline: {pipeline_name}\nJob: {job_name}\nBuild: #{build_id}"
 
     build_url = ""
     if url_enabled:
@@ -89,9 +96,7 @@ def out_res(source, params, workspace):
         else:
             print(f"Message file {message_file} not found. Skipping", file=sys.stderr)
 
-    message_text = f"""Pipeline: {pipeline_name}
-Job: {job_name}
-Build: #{build_id}
+    message_text = f"""{job_info}
 {build_url}
 {message or ""}
 {message_from_file}"""
@@ -112,6 +117,7 @@ Build: #{build_id}
             {"name": "Pipeline Name", "value": str(pipeline_name)},
             {"name": "Job Name", "value": str(job_name)},
             {"name": "Build Number", "value": str(build_id)},
+            {"name": "Info Sent", "value": str(info_enabled)},
             {
                 "name": "Sender Name",
                 "value": api_res.get("sender") and api_res["sender"].get("name"),
