@@ -79,13 +79,15 @@ def out_res(source, params, workspace):
 
     job_info = ""
     if info_enabled:
-        job_info = f"Pipeline: {pipeline_name}\nJob: {job_name}\nBuild: #{build_id}"
+        job_info = f"Pipeline: {pipeline_name}\nJob: {job_name}\nBuild: #{build_id}\n"
 
     build_url = ""
+    message_url = ""
     if url_enabled:
         team_name = os.getenv("BUILD_TEAM_NAME")
         atc_url = os.getenv("ATC_EXTERNAL_URL")
         build_url = f"{atc_url}/teams/{team_name}/pipelines/{pipeline_name}/jobs/{job_name}/builds/{build_id}"
+        message_url = f"{build_url}\n"
 
     message_from_file = ""
     if message_file:
@@ -96,10 +98,7 @@ def out_res(source, params, workspace):
         else:
             print(f"Message file {message_file} not found. Skipping", file=sys.stderr)
 
-    message_text = f"""{job_info}
-{build_url}
-{message or ""}
-{message_from_file}"""
+    message_text = f"{job_info}{message_url}{message or ''}\n{message_from_file}"
     status, text = send(url, message_text, create_thread)
     api_res = json.loads(text)
 
