@@ -95,6 +95,10 @@ def out_res(source, params, workspace):
     if info_enabled:
         job_info = f"Pipeline: {pipeline_name}\nJob: {job_name}\nBuild: #{build_id}\n"
 
+    message_out = ""
+    if message:
+        message_out = f"{message}\n"
+
     build_url = ""
     message_url = ""
     if url_enabled:
@@ -105,7 +109,7 @@ def out_res(source, params, workspace):
 
     message_from_file = read_message_file(message_file, workspace)
 
-    message_text = f"{job_info}{message_url}{message or ''}\n{message_from_file}"
+    message_text = f"{job_info}{message_url}{message_out}{message_from_file}"
     status, text = send(url, message_text, create_thread)
     api_res = json.loads(text)
 
