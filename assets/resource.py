@@ -23,6 +23,18 @@ def send(url, msg, create_thread):
     return (response.status_code, response.text)
 
 
+# Return content of message file as a string
+def read_message_file(message_file, workspace):
+    if message_file:
+        message_file_path = f"{workspace}/{message_file}"
+        if os.path.isfile(message_file_path):
+            with open(message_file_path, "r") as f:
+                return f.read().rstrip("\n")
+        else:
+            print(f"Message file {message_file} not found. Skipping", file=sys.stderr)
+    return ""
+
+
 # Parse source/params, call the requested command and return the output.
 def run_resource(command_name, json_data, command_arguments):
     try:
@@ -71,7 +83,9 @@ def out_res(source, params, workspace):
         params.get("post_info") if isinstance(params.get("post_info"), bool) else True
     )
     create_thread = (
-        params.get("create_thread") if isinstance(params.get("create_thread"), bool) else False
+        params.get("create_thread")
+        if isinstance(params.get("create_thread"), bool)
+        else False
     )
     pipeline_name = os.getenv("BUILD_PIPELINE_NAME")
     job_name = os.getenv("BUILD_JOB_NAME")
@@ -89,14 +103,7 @@ def out_res(source, params, workspace):
         build_url = f"{atc_url}/teams/{team_name}/pipelines/{pipeline_name}/jobs/{job_name}/builds/{build_id}"
         message_url = f"{build_url}\n"
 
-    message_from_file = ""
-    if message_file:
-        message_file_path = f"{workspace}/{message_file}"
-        if os.path.isfile(message_file_path):
-            with open(message_file_path, "r") as f:
-                message_from_file = f.read().rstrip("\n")
-        else:
-            print(f"Message file {message_file} not found. Skipping", file=sys.stderr)
+    message_from_file = read_message_file(message_file, workspace)
 
     message_text = f"{job_info}{message_url}{message or ''}\n{message_from_file}"
     status, text = send(url, message_text, create_thread)
