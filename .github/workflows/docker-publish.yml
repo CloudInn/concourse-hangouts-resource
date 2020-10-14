@@ -1,5 +1,5 @@
 ---
-name: Lint, Test, Build
+name: Build
 
 on:
   push:
@@ -23,6 +23,7 @@ env:
 
 jobs:
   test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -50,7 +51,7 @@ jobs:
   push:
     # Ensure test job passes before pushing image.
     needs: test
-
+    name: Push
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
 
