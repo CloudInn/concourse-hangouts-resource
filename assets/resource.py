@@ -81,20 +81,18 @@ def out_res(source, params, workspace):
     url = source.get("webhook_url")
     if not url:
         raise Exception("Webhook URL missing from configuration")
-    message = params.get("message")
     message_file = params.get("message_file")
-    info_enabled = get_bool(params.get("post_info"), True)
     create_thread = get_bool(params.get("create_thread"), False)
     pipeline_name = os.getenv("BUILD_PIPELINE_NAME")
     job_name = os.getenv("BUILD_JOB_NAME")
     build_id = os.getenv("BUILD_NAME")
 
     job_info = ""
-    if info_enabled:
+    if info_enabled := get_bool(params.get("post_info"), True):
         job_info = f"Pipeline: {pipeline_name}\nJob: {job_name}\nBuild: #{build_id}\n"
 
     message_out = ""
-    if message:
+    if message := params.get("message"):
         message_out = f"{message}\n"
 
     build_url = ""
