@@ -83,7 +83,6 @@ def out_res(source, params, workspace):
         raise Exception("Webhook URL missing from configuration")
     message = params.get("message")
     message_file = params.get("message_file")
-    url_enabled = get_bool(params.get("post_url"), True)
     info_enabled = get_bool(params.get("post_info"), True)
     create_thread = get_bool(params.get("create_thread"), False)
     pipeline_name = os.getenv("BUILD_PIPELINE_NAME")
@@ -100,7 +99,7 @@ def out_res(source, params, workspace):
 
     build_url = ""
     message_url = ""
-    if url_enabled:
+    if get_bool(params.get("post_url"), True):
         team_name = os.getenv("BUILD_TEAM_NAME")
         atc_url = os.getenv("ATC_EXTERNAL_URL")
         build_url = f"{atc_url}/teams/{team_name}/pipelines/{pipeline_name}/jobs/{job_name}/builds/{build_id}"
@@ -127,7 +126,6 @@ def out_res(source, params, workspace):
             {"name": "Status", "value": "Posted"},
             {"name": "Message", "value": str(message)},
             {"name": "Message File Name", "value": str(message_file)},
-            {"name": "URL Sent", "value": str(url_enabled)},
             {"name": "Build URL", "value": str(build_url)},
             {"name": "Thread Created", "value": str(create_thread)},
             {"name": "Pipeline Name", "value": str(pipeline_name)},

@@ -58,7 +58,7 @@ def test_run_resource_out_basic(basic_input, basic_output, env_vars):
 
 def test_run_resource_out_thread(basic_input, basic_output, env_vars):
     basic_input["params"]["create_thread"] = True
-    basic_output["metadata"][5]["value"] = "True"
+    basic_output["metadata"][4]["value"] = "True"
     data = json.dumps(basic_input)
     assert resource.run_resource("out", data, "") == (basic_output, True)
 
@@ -100,7 +100,7 @@ def test_run_resource_out_add_info(basic_input, basic_output, env_vars):
 
 def test_run_resource_out_no_info(basic_input, basic_output, env_vars):
     basic_input["params"]["post_info"] = False
-    basic_output["metadata"][9]["value"] = "False"
+    basic_output["metadata"][8]["value"] = "False"
     data = json.dumps(basic_input)
     assert resource.run_resource("out", data, "") == (basic_output, True)
 
@@ -113,8 +113,7 @@ def test_run_resource_out_add_url(basic_input, basic_output, env_vars):
 
 def test_run_resource_out_no_url(basic_input, basic_output, env_vars):
     basic_input["params"]["post_url"] = False
-    basic_output["metadata"][3]["value"] = "False"
-    basic_output["metadata"][4]["value"] = ""
+    basic_output["metadata"][3]["value"] = ""
     data = json.dumps(basic_input)
     assert resource.run_resource("out", data, "") == (basic_output, True)
 
@@ -169,7 +168,6 @@ def basic_output():
             {"name": "Status", "value": "Posted"},
             {"name": "Message", "value": "Test Message"},
             {"name": "Message File Name", "value": "None"},
-            {"name": "URL Sent", "value": "True"},
             {"name": "Build URL", "value": url},
             {"name": "Thread Created", "value": "False"},
             {"name": "Pipeline Name", "value": "Test_Pipeline"},
