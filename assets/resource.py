@@ -23,6 +23,13 @@ def send(url, msg, create_thread):
     return (response.status_code, response.text)
 
 
+# Return data if it's a boolean, otherwise return the default
+def get_bool(data, default):
+    if not isinstance(default, bool):
+        raise Exception("Default for get_bool was not set to a bool")
+    return (data if isinstance(data, bool) else default)
+
+
 # Return content of message file as a string
 def read_message_file(message_file, workspace):
     if message_file:
@@ -76,17 +83,9 @@ def out_res(source, params, workspace):
         raise Exception("Webhook URL missing from configuration")
     message = params.get("message")
     message_file = params.get("message_file")
-    url_enabled = (
-        params.get("post_url") if isinstance(params.get("post_url"), bool) else True
-    )
-    info_enabled = (
-        params.get("post_info") if isinstance(params.get("post_info"), bool) else True
-    )
-    create_thread = (
-        params.get("create_thread")
-        if isinstance(params.get("create_thread"), bool)
-        else False
-    )
+    url_enabled = get_bool(params.get("post_url"), True)
+    info_enabled = get_bool(params.get("post_info"), True)
+    create_thread = get_bool(params.get("create_thread"), False)
     pipeline_name = os.getenv("BUILD_PIPELINE_NAME")
     job_name = os.getenv("BUILD_JOB_NAME")
     build_id = os.getenv("BUILD_NAME")
@@ -112,6 +111,13 @@ def out_res(source, params, workspace):
     message_text = f"{job_info}{message_url}{message_out}{message_from_file}"
     status, text = send(url, message_text, create_thread)
     api_res = json.loads(text)
+    sender_name = api_res.get("sender") and api_res["sender"].get("name")
+    sender_disp_name = api_res.get("sender") and api_res["sender"].get("displayName")
+    space_name = api_res.get("space") and api_res["space"].get("name")
+    space_disp_name = api_res.get("space") and api_res["space"].get("displayName")
+    space_type = api_res.get("space") and api_res["space"].get("type")
+    thread_name = api_res.get("thread") and api_res["thread"].get("name")
+    create_time = api_res.get("createTime")
 
     print("Message sent to Google Chat!", file=sys.stderr)
 
@@ -128,31 +134,13 @@ def out_res(source, params, workspace):
             {"name": "Job Name", "value": str(job_name)},
             {"name": "Build Number", "value": str(build_id)},
             {"name": "Info Sent", "value": str(info_enabled)},
-            {
-                "name": "Sender Name",
-                "value": api_res.get("sender") and api_res["sender"].get("name"),
-            },
-            {
-                "name": "Sender Display Name",
-                "value": api_res.get("sender") and api_res["sender"].get("displayName"),
-            },
-            {
-                "name": "Space Name",
-                "value": api_res.get("space") and api_res["space"].get("name"),
-            },
-            {
-                "name": "Space Display Name",
-                "value": api_res.get("space") and api_res["space"].get("displayName"),
-            },
-            {
-                "name": "Space Type",
-                "value": api_res.get("space") and api_res["space"].get("type"),
-            },
-            {
-                "name": "Thread Name",
-                "value": api_res.get("thread") and api_res["thread"].get("name"),
-            },
-            {"name": "Time Created", "value": api_res.get("createTime")},
+            {"name": "Sender Name", "value": sender_name},
+            {"name": "Sender Display Name", "value": sender_disp_name},
+            {"name": "Space Name", "value": space_name},
+            {"name": "Space Display Name", "value": space_disp_name},
+            {"name": "Space Type", "value": space_type},
+            {"name": "Thread Name", "value": thread_name},
+            {"name": "Time Created", "value": create_time},
         ],
     }
 
