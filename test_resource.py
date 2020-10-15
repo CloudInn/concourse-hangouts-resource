@@ -20,6 +20,27 @@ def test_send_thread():
     assert test_message in message
 
 
+def test_get_bool_true():
+    assert resource.get_bool(True, True)
+
+
+def test_get_bool_false():
+    assert not resource.get_bool(False, True)
+
+
+def test_get_bool_default():
+    assert resource.get_bool("notaboolean", True)
+
+
+def test_get_bool_failure():
+    try:
+        resource.get_bool(True, "notaboolean")
+    except Exception as ex:
+        print(ex)
+        return
+    assert False
+
+
 def test_run_resource_check(basic_input):
     data = json.dumps(basic_input)
     assert resource.run_resource("check", data, "") == ([], True)
