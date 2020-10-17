@@ -33,7 +33,7 @@ def get_bool(data, default):
 # Return content of message file as a string
 def read_message_file(message_file, workspace):
     if message_file:
-        message_file_path = f"{workspace}/{message_file}"
+        message_file_path = workspace / message_file
         if os.path.isfile(message_file_path):
             with open(message_file_path, "r") as f:
                 return f.read().rstrip("\n")
@@ -78,8 +78,7 @@ def in_res(source, params, workspace):
 
 # Extract required params for out, construct message and send it.
 def out_res(source, params, workspace):
-    url = source.get("webhook_url")
-    if not url:
+    if not (url:= source.get("webhook_url")):
         raise Exception("Webhook URL missing from configuration")
     message_file = params.get("message_file")
     create_thread = get_bool(params.get("create_thread"), False)
@@ -103,10 +102,12 @@ def out_res(source, params, workspace):
         build_url = f"{atc_url}/teams/{team_name}/pipelines/{pipeline_name}/jobs/{job_name}/builds/{build_id}"
         message_url = f"{build_url}\n"
 
+    # Generate message and send it to Google Chat
     message_from_file = read_message_file(message_file, workspace)
-
     message_text = f"{job_info}{message_url}{message_out}{message_from_file}"
     status, text = send(url, message_text, create_thread)
+
+    # Extract information from Google Chat API Response
     api_res = json.loads(text)
     sender_name = api_res.get("sender") and api_res["sender"].get("name")
     sender_disp_name = api_res.get("sender") and api_res["sender"].get("displayName")
