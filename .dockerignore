@@ -1,5 +1,4 @@
 *
 !assets/
-!testing/
 !test_resource.py
 !requirements.txt
