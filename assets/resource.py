@@ -78,7 +78,7 @@ def in_res(source, params, workspace):
 
 # Extract required params for out, construct message and send it.
 def out_res(source, params, workspace):
-    if not (url:= source.get("webhook_url")):
+    if not (url := source.get("webhook_url")):
         raise Exception("Webhook URL missing from configuration")
     message_file = params.get("message_file")
     create_thread = get_bool(params.get("create_thread"), False)
