@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/barrelmaker97/concourse-hangouts-resource/badge.svg?branch=master)](https://coveralls.io/github/barrelmaker97/concourse-hangouts-resource?branch=master)
+[![codecov](https://codecov.io/gh/barrelmaker97/concourse-hangouts-resource/branch/master/graph/badge.svg?token=4CX85DLIC0)](https://codecov.io/gh/barrelmaker97/concourse-hangouts-resource)
 [![CodeFactor](https://www.codefactor.io/repository/github/barrelmaker97/concourse-hangouts-resource/badge/master)](https://www.codefactor.io/repository/github/barrelmaker97/concourse-hangouts-resource/overview/master)
 
 # Concourse Google Hangouts Resource
