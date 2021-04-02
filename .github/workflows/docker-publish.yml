@@ -19,7 +19,6 @@ on:
 env:
   IMAGE_NAME: concourse-hangouts-resource
   DOCKER_BUILDKIT: 1
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   test:
