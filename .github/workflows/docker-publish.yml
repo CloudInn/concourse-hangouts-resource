@@ -48,6 +48,7 @@ jobs:
         uses: codecov/codecov-action@v2.0.2
         with:
           fail_ci_if_error: true
+          files: ./.coverage
 
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
