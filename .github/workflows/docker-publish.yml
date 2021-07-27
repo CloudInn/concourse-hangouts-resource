@@ -45,9 +45,10 @@ jobs:
         run: |
           coverage run -m pytest
       - name: Upload Coverage Results to Codecov
-        uses: codecov/codecov-action@v1.5.2
+        uses: codecov/codecov-action@v2.0.2
         with:
           fail_ci_if_error: true
+          files: ./.coverage
 
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
