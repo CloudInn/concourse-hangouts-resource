@@ -98,7 +98,7 @@ jobs:
 ```
 
 ## Full example:
-This is a working example of a pipeline file that does absolutely nothing other then posting to Hangouts.
+This is a working example of a pipeline file that does absolutely nothing other than posting to Hangouts.
 
 You can test it as is after passing `hangouts_webhook` while setting up the pipeline or replacing `((hangouts_webhook))` in place with the webhook URL.
 
